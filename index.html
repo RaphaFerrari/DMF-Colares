@@ -5,15 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MDF Colares | Soluções Completas para Marcenaria</title>
     
-    <link rel="icon" href="assets/images/favicon.ico">
+    <!-- Favicon com fallback (se falhar, não quebra a página) -->
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 
+    <!-- Fontes Premium -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <!-- Configuração da Paleta de Cores da Marca -->
     <script>
         tailwind.config = {
             theme: {
@@ -28,6 +34,10 @@
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                         heading: ['Montserrat', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'premium': '0 10px 40px -10px rgba(14, 37, 76, 0.15)',
+                        'card': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
                     }
                 }
             }
@@ -35,146 +45,218 @@
     </script>
 
     <style>
-        ::-webkit-scrollbar { width: 10px; height: 10px; }
-        ::-webkit-scrollbar-track { background: #e3d4c4; opacity: 0.3; }
-        ::-webkit-scrollbar-thumb { background: #0e254c; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #14549c; }
+        /* Estilização da Barra de Rolagem */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #fcfbf9; }
+        ::-webkit-scrollbar-thumb { background: #b0a094; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #83462d; }
         
+        /* Ocultar setas em inputs numéricos */
         input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { 
-            -webkit-appearance: none; 
-            margin: 0; 
-        }
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
+        /* Ocultar barra de rolagem horizontal nas abas (Clean UI) */
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         
-        @keyframes fadeInTab {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Animações Customizadas */
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.98) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
-        .animate-fadeInTab {
-            animation: fadeInTab 0.4s ease-out forwards;
+        .animate-fadeInScale { animation: fadeInScale 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .toast-enter { animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        
+        @keyframes slideOutRight {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(50px); }
+        }
+        .toast-exit { animation: slideOutRight 0.3s ease-in forwards; }
+
+        /* Efeito Textarea Focus Pulse */
+        .pulse-border {
+            animation: pulseBorder 1.5s ease-out;
+        }
+        @keyframes pulseBorder {
+            0% { box-shadow: 0 0 0 0 rgba(20, 84, 156, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(20, 84, 156, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(20, 84, 156, 0); }
         }
     </style>
 </head>
 <body class="font-sans text-cor-marinho bg-[#fcfbf9] flex flex-col min-h-screen selection:bg-cor-destaque selection:text-white">
 
-    <header class="fixed top-0 w-full bg-white/95 backdrop-blur-sm shadow-md z-50 border-b border-cor-areia transition-all duration-300">
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-24 right-4 z-[70] flex flex-col gap-3 pointer-events-none"></div>
+
+    <header class="fixed top-0 w-full bg-white/90 backdrop-blur-md shadow-sm z-50 border-b border-cor-areia/50 transition-all duration-300">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
+                <!-- Logo com Fallback Inteligente (Avatar gerado caso não encontre a imagem real) -->
                 <div class="flex-shrink-0 flex items-center">
-                    <a href="#" class="flex items-center gap-3">
-                        <img src="assets/images/logo.png" alt="Logo MDF Colares" class="h-12 w-auto object-contain" onerror="this.onerror=null; this.src='https://placehold.co/200x80/0e254c/ffffff?text=MDF+Colares';">
+                    <a href="#" class="flex items-center gap-3 transition-transform hover:scale-105">
+                        <img src="assets/images/logo.png" 
+                             alt="Logo MDF Colares" 
+                             class="h-12 w-auto object-contain rounded-md" 
+                             onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=MDF+Colares&background=0e254c&color=e3d4c4&size=150&font-size=0.33&rounded=true&bold=true';">
                     </a>
                 </div>
 
-                <nav class="hidden md:flex space-x-8">
-                    <a href="#servicos" class="font-heading font-semibold text-cor-marinho hover:text-cor-destaque transition-colors">Serviços</a>
-                    <a href="#catalogo" class="font-heading font-semibold text-cor-marinho hover:text-cor-destaque transition-colors">Catálogo</a>
-                    <a href="#localizacao" class="font-heading font-semibold text-cor-marinho hover:text-cor-destaque transition-colors">Localização</a>
+                <nav class="hidden md:flex space-x-10">
+                    <a href="#servicos" class="font-heading font-semibold text-cor-marinho hover:text-cor-destaque relative group py-2">
+                        Nossos Serviços
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cor-destaque transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#catalogo" class="font-heading font-semibold text-cor-marinho hover:text-cor-destaque relative group py-2">
+                        Catálogo Completo
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cor-destaque transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#localizacao" class="font-heading font-semibold text-cor-marinho hover:text-cor-destaque relative group py-2">
+                        Localização
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cor-destaque transition-all duration-300 group-hover:w-full"></span>
+                    </a>
                 </nav>
 
                 <div class="hidden md:flex items-center">
-                    <a href="#orcamento" class="bg-cor-destaque hover:bg-cor-marinho text-white font-heading font-bold py-2.5 px-6 rounded-full shadow-lg hover:shadow-cor-destaque/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2">
-                        <i class="fa-solid fa-calculator"></i> Orçamento Expresso
+                    <a href="#orcamento" class="bg-cor-destaque hover:bg-cor-marinho text-white font-heading font-bold py-3 px-7 rounded-full shadow-[0_8px_20px_rgba(20,84,156,0.25)] hover:shadow-[0_10px_25px_rgba(14,37,76,0.3)] hover:-translate-y-1 transition-all duration-300 flex items-center gap-2">
+                        <i class="fa-solid fa-calculator text-lg"></i> Orçamento
                     </a>
                 </div>
 
                 <div class="md:hidden flex items-center">
-                    <a href="#orcamento" class="text-cor-destaque hover:text-cor-marinho text-2xl mr-2 transition-colors"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="#orcamento" class="bg-cor-destaque text-white p-3 rounded-full shadow-lg transition-transform active:scale-95"><i class="fa-solid fa-calculator"></i></a>
                 </div>
             </div>
         </div>
     </header>
 
     <main class="flex-grow pt-20">
-        <section class="relative bg-cor-marinho h-[600px] md:h-[700px] flex items-center">
+        <section class="relative bg-cor-marinho h-[85vh] min-h-[600px] flex items-center overflow-hidden">
+            <!-- Background Image com Fallback para Unsplash de Alta Qualidade -->
             <div class="absolute inset-0 z-0">
-                <img src="assets/images/banner.png" alt="Oficina de Marcenaria" class="w-full h-full object-cover object-center" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1611021061285-1815fb507316?q=80&w=2000&auto=format&fit=crop';">
-                <div class="absolute inset-0 bg-gradient-to-r from-cor-marinho/95 to-cor-marinho/60"></div>
+                <img src="assets/images/banner.png" 
+                     alt="Oficina de Marcenaria" 
+                     class="w-full h-full object-cover object-center scale-105 animate-[pulse_20s_ease-in-out_infinite_alternate]" 
+                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1540659805408-fbf8f54b17b2?q=80&w=2000&auto=format&fit=crop';">
+                <!-- Overlay Gradiente Elegante -->
+                <div class="absolute inset-0 bg-gradient-to-r from-cor-marinho via-cor-marinho/90 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-cor-marinho/50 to-transparent"></div>
             </div>
 
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div class="max-w-3xl">
-                    <span class="inline-block py-1 px-3 rounded-full bg-cor-areia text-cor-marinho font-bold text-sm tracking-widest uppercase mb-4 shadow-sm border border-cor-neutra/30">Qualidade & Precisão</span>
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white leading-tight mb-6">
-                        Soluções Completas para a sua <span class="text-cor-areia relative whitespace-nowrap">Marcenaria<svg class="absolute -bottom-2 left-0 w-full h-3 text-cor-madeira opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="4" fill="transparent"/></svg></span>
+                <div class="max-w-3xl animate-fadeInScale">
+                    <div class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-cor-areia font-medium text-sm tracking-wide mb-6">
+                        <span class="w-2 h-2 rounded-full bg-cor-areia animate-pulse"></span> Excelência em Marcenaria
+                    </div>
+                    
+                    <h1 class="text-4xl md:text-5xl lg:text-7xl font-heading font-extrabold text-white leading-[1.1] mb-6 tracking-tight">
+                        Soluções Completas <br /> para a sua <span class="text-transparent bg-clip-text bg-gradient-to-r from-cor-areia to-[#fff0e0] relative inline-block">
+                            Projeto
+                            <!-- Detalhe do traço embaixo da palavra -->
+                            <svg class="absolute -bottom-3 left-0 w-full h-3 text-cor-madeira opacity-90" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="5" fill="transparent" stroke-linecap="round"/></svg>
+                        </span>
                     </h1>
-                    <p class="text-lg md:text-xl text-cor-areia/90 mb-8 font-light max-w-2xl">
-                        Do plano de corte milimétrico às ferragens e acabamentos. Agilidade e excelência que o seu projeto exige e o seu cliente merece.
+                    
+                    <p class="text-lg md:text-2xl text-cor-areia/90 mb-10 font-light max-w-2xl leading-relaxed">
+                        Do plano de corte milimétrico às ferragens de alto padrão. Encontre tudo o que seu projeto exige em um só lugar.
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="#orcamento" class="bg-cor-destaque hover:bg-white text-white hover:text-cor-destaque font-heading font-bold text-lg py-4 px-8 rounded-full shadow-[0_0_20px_rgba(20,84,156,0.5)] hover:shadow-[0_0_25px_rgba(227,212,196,0.4)] transition-all duration-300 text-center flex items-center justify-center gap-3">
-                            <i class="fa-solid fa-file-signature"></i> Solicitar Orçamento
+                    
+                    <div class="flex flex-col sm:flex-row gap-5">
+                        <a href="#orcamento" class="bg-cor-destaque hover:bg-white text-white hover:text-cor-destaque font-heading font-bold text-lg py-4 px-8 rounded-full shadow-[0_0_25px_rgba(20,84,156,0.6)] hover:shadow-[0_0_35px_rgba(255,255,255,0.4)] hover:-translate-y-1 transition-all duration-300 text-center flex items-center justify-center gap-3">
+                            <i class="fa-regular fa-paper-plane"></i> Solicitar Orçamento
                         </a>
-                        <a href="#servicos" class="bg-transparent hover:bg-cor-areia/10 text-white border-2 border-cor-areia/50 hover:border-cor-areia font-heading font-bold text-lg py-4 px-8 rounded-full transition-all duration-300 text-center">
-                            Conhecer Serviços
+                        <a href="#catalogo" class="bg-transparent hover:bg-white/10 text-white backdrop-blur-sm border border-white/30 hover:border-white font-heading font-medium text-lg py-4 px-8 rounded-full transition-all duration-300 text-center flex items-center justify-center gap-2">
+                            Ver Catálogo <i class="fa-solid fa-arrow-down text-sm"></i>
                         </a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="servicos" class="bg-cor-areia/80 py-12 border-b border-cor-neutra/40">
+        <section id="servicos" class="bg-white py-20 relative -mt-6 rounded-t-[3rem] z-20 shadow-[0_-15px_30px_rgba(0,0,0,0.05)]">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-cor-marinho/10">
-                    <div class="flex items-center justify-center gap-4 p-4">
-                        <div class="w-16 h-16 rounded-full bg-cor-marinho flex items-center justify-center text-cor-areia text-2xl shadow-lg">
-                            <i class="fa-solid fa-bolt"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-heading font-bold text-xl text-cor-marinho">Agilidade</h3>
-                            <p class="text-sm text-cor-marinho/70">Entregas no prazo combinado</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-center gap-4 p-4">
-                        <div class="w-16 h-16 rounded-full bg-cor-madeira flex items-center justify-center text-cor-areia text-2xl shadow-lg">
+                
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <h2 class="font-heading font-bold text-3xl md:text-4xl text-cor-marinho mb-4">A Base do Seu Sucesso</h2>
+                    <p class="text-cor-neutra text-lg">Nosso compromisso é entregar qualidade em cada detalhe, otimizando o tempo de produção da sua marcenaria.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Card 1 -->
+                    <div class="bg-[#fcfbf9] rounded-3xl p-8 border border-cor-areia/40 hover:border-cor-destaque/30 shadow-card hover:shadow-premium transition-all duration-300 group hover:-translate-y-2">
+                        <div class="w-16 h-16 rounded-2xl bg-cor-marinho/5 text-cor-marinho flex items-center justify-center text-3xl mb-6 group-hover:bg-cor-destaque group-hover:text-white transition-colors duration-300">
                             <i class="fa-solid fa-ruler-combined"></i>
                         </div>
-                        <div>
-                            <h3 class="font-heading font-bold text-xl text-cor-marinho">Precisão</h3>
-                            <p class="text-sm text-cor-marinho/70">Cortes e usinagens perfeitas</p>
-                        </div>
+                        <h3 class="font-heading font-bold text-2xl text-cor-marinho mb-3">Corte & Usinagem</h3>
+                        <p class="text-cor-neutra leading-relaxed">Planos de corte com precisão milimétrica e usinagens perfeitas para encaixes impecáveis. Reduza o desperdício de chapas.</p>
                     </div>
-                    <div class="flex items-center justify-center gap-4 p-4">
-                        <div class="w-16 h-16 rounded-full bg-cor-destaque flex items-center justify-center text-white text-2xl shadow-lg">
-                            <i class="fa-solid fa-medal"></i>
+
+                    <!-- Card 2 -->
+                    <div class="bg-[#fcfbf9] rounded-3xl p-8 border border-cor-areia/40 hover:border-cor-destaque/30 shadow-card hover:shadow-premium transition-all duration-300 group hover:-translate-y-2">
+                        <div class="w-16 h-16 rounded-2xl bg-cor-madeira/10 text-cor-madeira flex items-center justify-center text-3xl mb-6 group-hover:bg-cor-madeira group-hover:text-white transition-colors duration-300">
+                            <i class="fa-solid fa-layer-group"></i>
                         </div>
-                        <div>
-                            <h3 class="font-heading font-bold text-xl text-cor-marinho">Qualidade</h3>
-                            <p class="text-sm text-cor-marinho/70">Os melhores materiais do mercado</p>
+                        <h3 class="font-heading font-bold text-2xl text-cor-marinho mb-3">Filetamento</h3>
+                        <p class="text-cor-neutra leading-relaxed">Acabamento superior de bordas com maquinário de alta tecnologia, garantindo colagem resistente e estética refinada.</p>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-[#fcfbf9] rounded-3xl p-8 border border-cor-areia/40 hover:border-cor-destaque/30 shadow-card hover:shadow-premium transition-all duration-300 group hover:-translate-y-2">
+                        <div class="w-16 h-16 rounded-2xl bg-cor-destaque/10 text-cor-destaque flex items-center justify-center text-3xl mb-6 group-hover:bg-cor-destaque group-hover:text-white transition-colors duration-300">
+                            <i class="fa-solid fa-toolbox"></i>
                         </div>
+                        <h3 class="font-heading font-bold text-2xl text-cor-marinho mb-3">Tudo em Ferragens</h3>
+                        <p class="text-cor-neutra leading-relaxed">Da dobradiça essencial ao articulador premium. Estoque completo de ferragens, puxadores, colas e acessórios.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="catalogo" class="py-24 bg-white border-b border-cor-areia/50">
+        <section id="catalogo" class="py-24 bg-cor-areia/10 border-y border-cor-areia/30 relative">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
                 
-                <div class="text-center max-w-3xl mx-auto mb-12">
-                    <span class="inline-block py-1 px-3 rounded-full bg-cor-areia/40 text-cor-marinho font-bold text-sm tracking-widest uppercase mb-4 border border-cor-neutra/30 shadow-sm">Nosso Estoque</span>
-                    <h2 class="font-heading font-extrabold text-3xl md:text-4xl text-cor-marinho mb-4">Catálogo Completo de Produtos</h2>
-                    <p class="text-cor-marinho/70 text-lg">Selecione a categoria e clique em qualquer produto para <strong class="text-cor-destaque">adicioná-lo diretamente à sua lista de orçamento</strong>.</p>
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                    <div class="max-w-2xl">
+                        <span class="text-cor-destaque font-bold text-sm tracking-widest uppercase mb-2 block"><i class="fa-solid fa-store mr-1"></i> Catálogo de Produtos</span>
+                        <h2 class="font-heading font-extrabold text-3xl md:text-5xl text-cor-marinho mb-4">Tudo o que seu projeto precisa</h2>
+                        <p class="text-cor-neutra text-lg">Navegue pelas categorias e <strong class="text-cor-marinho font-semibold">clique nos produtos</strong> para adicioná-los instantaneamente à sua lista de orçamento.</p>
+                    </div>
                 </div>
 
-                <div class="flex overflow-x-auto space-x-2 border-b-2 border-cor-areia/40 pb-px mb-10 scrollbar-hide snap-x">
-                    <button class="tab-btn snap-start px-6 py-4 font-heading font-semibold text-cor-marinho border-b-4 border-cor-destaque bg-cor-areia/30 rounded-t-xl whitespace-nowrap transition-colors flex items-center gap-2" onclick="openCategory(event, 'cat-quimicos')"><i class="fa-solid fa-spray-can text-lg"></i> Químicos e Colas</button>
+                <!-- Fix: Menu Cortado resolvido usando Pílulas (Pills) e gap-3 com padding -->
+                <div class="flex overflow-x-auto gap-3 pb-4 mb-8 scrollbar-hide snap-x -mx-4 px-4 sm:mx-0 sm:px-0 relative z-10">
+                    <button class="tab-btn snap-start shrink-0 px-6 py-3 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-cor-marinho text-white shadow-md border border-cor-marinho flex items-center gap-2" onclick="openCategory(event, 'cat-quimicos')">
+                        <i class="fa-solid fa-spray-can"></i> Químicos e Colas
+                    </button>
                     
-                    <button class="tab-btn snap-start px-6 py-4 font-heading font-semibold text-cor-neutra border-b-4 border-transparent hover:text-cor-marinho hover:bg-cor-areia/20 rounded-t-xl whitespace-nowrap transition-colors flex items-center gap-2" onclick="openCategory(event, 'cat-ferragens')"><i class="fa-solid fa-door-open text-lg"></i> Ferragens & Corrediças</button>
+                    <button class="tab-btn snap-start shrink-0 px-6 py-3 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-white text-cor-neutra hover:bg-cor-areia/30 border border-cor-areia/50 hover:text-cor-marinho flex items-center gap-2" onclick="openCategory(event, 'cat-ferragens')">
+                        <i class="fa-solid fa-door-open"></i> Ferragens & Corrediças
+                    </button>
                     
-                    <button class="tab-btn snap-start px-6 py-4 font-heading font-semibold text-cor-neutra border-b-4 border-transparent hover:text-cor-marinho hover:bg-cor-areia/20 rounded-t-xl whitespace-nowrap transition-colors flex items-center gap-2" onclick="openCategory(event, 'cat-suportes')"><i class="fa-solid fa-ruler-combined text-lg"></i> Suportes & Cantoneiras</button>
+                    <button class="tab-btn snap-start shrink-0 px-6 py-3 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-white text-cor-neutra hover:bg-cor-areia/30 border border-cor-areia/50 hover:text-cor-marinho flex items-center gap-2" onclick="openCategory(event, 'cat-suportes')">
+                        <i class="fa-solid fa-ruler-combined"></i> Suportes & Cantoneiras
+                    </button>
                     
-                    <button class="tab-btn snap-start px-6 py-4 font-heading font-semibold text-cor-neutra border-b-4 border-transparent hover:text-cor-marinho hover:bg-cor-areia/20 rounded-t-xl whitespace-nowrap transition-colors flex items-center gap-2" onclick="openCategory(event, 'cat-puxadores')"><i class="fa-solid fa-grip-lines text-lg"></i> Puxadores & Pés</button>
+                    <button class="tab-btn snap-start shrink-0 px-6 py-3 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-white text-cor-neutra hover:bg-cor-areia/30 border border-cor-areia/50 hover:text-cor-marinho flex items-center gap-2" onclick="openCategory(event, 'cat-puxadores')">
+                        <i class="fa-solid fa-grip-lines"></i> Puxadores & Pés
+                    </button>
                     
-                    <button class="tab-btn snap-start px-6 py-4 font-heading font-semibold text-cor-neutra border-b-4 border-transparent hover:text-cor-marinho hover:bg-cor-areia/20 rounded-t-xl whitespace-nowrap transition-colors flex items-center gap-2" onclick="openCategory(event, 'cat-fechaduras')"><i class="fa-solid fa-lock text-lg"></i> Fechaduras & Fixação</button>
+                    <button class="tab-btn snap-start shrink-0 px-6 py-3 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-white text-cor-neutra hover:bg-cor-areia/30 border border-cor-areia/50 hover:text-cor-marinho flex items-center gap-2" onclick="openCategory(event, 'cat-fechaduras')">
+                        <i class="fa-solid fa-lock"></i> Fechaduras & Fixação
+                    </button>
 
-                    <button class="tab-btn snap-start px-6 py-4 font-heading font-semibold text-cor-neutra border-b-4 border-transparent hover:text-cor-marinho hover:bg-cor-areia/20 rounded-t-xl whitespace-nowrap transition-colors flex items-center gap-2" onclick="openCategory(event, 'cat-ferramentas')"><i class="fa-solid fa-toolbox text-lg"></i> Chapas & Ferramentas</button>
+                    <button class="tab-btn snap-start shrink-0 px-6 py-3 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-white text-cor-neutra hover:bg-cor-areia/30 border border-cor-areia/50 hover:text-cor-marinho flex items-center gap-2" onclick="openCategory(event, 'cat-ferramentas')">
+                        <i class="fa-solid fa-layer-group"></i> Ferramentas & MDF
+                    </button>
                 </div>
 
-                <div class="min-h-[400px]">
-                    <div id="cat-quimicos" class="tab-content block animate-fadeInTab">
+                <div class="min-h-[500px]">
+                    <div id="cat-quimicos" class="tab-content block animate-fadeInScale">
                         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="grid-quimicos"></div>
                     </div>
                     <div id="cat-ferragens" class="tab-content hidden">
@@ -196,113 +278,143 @@
             </div>
         </section>
 
-        <section id="orcamento" class="py-24 bg-cor-areia/20 relative">
-            <div class="absolute inset-0 opacity-[0.04] z-0 pointer-events-none" style="background-image: radial-gradient(#0e254c 2px, transparent 2px); background-size: 30px 30px;"></div>
-            
+        <section id="orcamento" class="py-24 bg-white relative">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div class="bg-white rounded-3xl shadow-[0_15px_50px_-15px_rgba(14,37,76,0.15)] overflow-hidden max-w-5xl mx-auto border border-cor-areia">
+                
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="font-heading font-extrabold text-3xl md:text-5xl text-cor-marinho mb-4">Envie seu Orçamento</h2>
+                    <p class="text-cor-neutra text-lg">Receberemos os dados estruturados diretamente no WhatsApp da loja e retornaremos rapidamente com os valores e disponibilidade.</p>
+                </div>
+
+                <div class="bg-white rounded-[2.5rem] shadow-premium overflow-hidden max-w-5xl mx-auto border border-cor-areia/40">
                     <div class="flex flex-col lg:flex-row">
                         
-                        <div class="bg-cor-marinho p-10 lg:w-1/3 text-white flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-heading font-bold text-3xl mb-4">Peça seu Orçamento</h3>
-                                <p class="text-cor-areia/80 mb-8 font-light leading-relaxed">Preencha os dados ao lado. Nossa equipe receberá sua solicitação diretamente no WhatsApp e retornará rapidamente com os valores.</p>
-                                
-                                <div class="space-y-6">
-                                    <div class="flex items-start gap-4">
-                                        <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0 text-cor-areia">
-                                            <i class="fa-solid fa-headset"></i>
-                                        </div>
-                                        <div>
-                                            <h4 class="font-semibold text-cor-areia">Atendimento Rápido</h4>
-                                            <p class="text-sm text-cor-areia/60">Resposta em horário comercial</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-start gap-4">
-                                        <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0 text-cor-areia">
-                                            <i class="fa-solid fa-truck-fast"></i>
-                                        </div>
-                                        <div>
-                                            <h4 class="font-semibold text-cor-areia">Entrega Eficiente</h4>
-                                            <p class="text-sm text-cor-areia/60">Consulte condições de frete</p>
-                                        </div>
-                                    </div>
+                        <!-- Painel Lateral de Info -->
+                        <div class="bg-gradient-to-br from-cor-marinho to-[#153463] p-10 lg:w-1/3 text-white flex flex-col justify-between relative overflow-hidden">
+                            <!-- Efeito Decorativo -->
+                            <div class="absolute -right-10 -top-10 w-40 h-40 bg-cor-destaque/30 rounded-full blur-3xl"></div>
+                            <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-cor-madeira/30 rounded-full blur-3xl"></div>
+                            
+                            <div class="relative z-10">
+                                <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-2xl mb-8 backdrop-blur-sm border border-white/20">
+                                    <i class="fa-solid fa-bolt text-cor-areia"></i>
                                 </div>
+                                <h3 class="font-heading font-bold text-3xl mb-4 text-white">Atendimento Expresso</h3>
+                                <p class="text-cor-areia/80 mb-8 font-light leading-relaxed">Sua lista será analisada pela nossa equipe de vendas assim que for enviada.</p>
+                                
+                                <ul class="space-y-6">
+                                    <li class="flex items-center gap-4">
+                                        <i class="fa-solid fa-check-circle text-cor-areia text-xl"></i>
+                                        <span class="text-white/90">Análise de estoque</span>
+                                    </li>
+                                    <li class="flex items-center gap-4">
+                                        <i class="fa-solid fa-check-circle text-cor-areia text-xl"></i>
+                                        <span class="text-white/90">Melhores condições de pgto</span>
+                                    </li>
+                                    <li class="flex items-center gap-4">
+                                        <i class="fa-solid fa-check-circle text-cor-areia text-xl"></i>
+                                        <span class="text-white/90">Separação rápida</span>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
 
-                        <div class="p-8 lg:p-10 lg:w-2/3">
-                            <form id="form-orcamento" class="space-y-6">
+                        <!-- O Formulário Inteligente -->
+                        <div class="p-8 lg:p-12 lg:w-2/3 bg-[#fcfbf9]">
+                            <form id="form-orcamento" class="space-y-8">
                                 
+                                <!-- Bloco 1: Identificação -->
                                 <div>
-                                    <h4 class="font-heading font-semibold text-cor-marinho border-b border-cor-areia pb-2 mb-4 text-lg"><i class="fa-regular fa-user mr-2 text-cor-destaque"></i>Dados do Cliente</h4>
+                                    <h4 class="font-heading font-bold text-cor-marinho mb-4 flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-cor-areia/40 flex items-center justify-center text-cor-destaque text-sm"><i class="fa-solid fa-user"></i></div> Identificação</h4>
                                     <div>
-                                        <label for="nome" class="block text-sm font-medium text-cor-marinho/90 mb-1">Nome Completo *</label>
-                                        <input type="text" id="nome" required class="w-full px-4 py-3 rounded-xl border border-cor-neutra/40 bg-cor-areia/10 focus:bg-white focus:ring-2 focus:ring-cor-destaque/40 focus:border-cor-destaque outline-none transition-all placeholder-cor-neutra/80" placeholder="Digite seu nome ou da empresa">
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h4 class="font-heading font-semibold text-cor-marinho border-b border-cor-areia pb-2 mb-4 mt-6 text-lg"><i class="fa-solid fa-location-dot mr-2 text-cor-destaque"></i>Endereço de Entrega</h4>
-                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        <div class="md:col-span-1">
-                                            <label for="cep" class="block text-sm font-medium text-cor-marinho/90 mb-1">CEP *</label>
-                                            <input type="text" id="cep" required maxlength="9" class="w-full px-4 py-3 rounded-xl border border-cor-neutra/40 bg-cor-areia/10 focus:bg-white focus:ring-2 focus:ring-cor-destaque/40 focus:border-cor-destaque outline-none transition-all placeholder-cor-neutra/80" placeholder="00000-000">
-                                            <span id="cep-feedback" class="text-xs text-cor-destaque font-medium hidden mt-1"><i class="fa-solid fa-check"></i> Endereço localizado</span>
-                                        </div>
-                                        <div class="md:col-span-2">
-                                            <label for="rua" class="block text-sm font-medium text-cor-marinho/90 mb-1">Rua / Avenida *</label>
-                                            <input type="text" id="rua" required class="w-full px-4 py-3 rounded-xl border border-cor-neutra/40 bg-cor-areia/10 focus:bg-white focus:ring-2 focus:ring-cor-destaque/40 focus:border-cor-destaque outline-none transition-all placeholder-cor-neutra/80" placeholder="Ex: Av. Senador Levindo Coelho">
-                                        </div>
-                                        <div class="md:col-span-1">
-                                            <label for="numero" class="block text-sm font-medium text-cor-marinho/90 mb-1">Número *</label>
-                                            <input type="text" id="numero" required class="w-full px-4 py-3 rounded-xl border border-cor-neutra/40 bg-cor-areia/10 focus:bg-white focus:ring-2 focus:ring-cor-destaque/40 focus:border-cor-destaque outline-none transition-all placeholder-cor-neutra/80" placeholder="Nº">
-                                        </div>
-                                        <div class="md:col-span-1">
-                                            <label for="complemento" class="block text-sm font-medium text-cor-marinho/90 mb-1">Complemento</label>
-                                            <input type="text" id="complemento" class="w-full px-4 py-3 rounded-xl border border-cor-neutra/40 bg-cor-areia/10 focus:bg-white focus:ring-2 focus:ring-cor-destaque/40 focus:border-cor-destaque outline-none transition-all placeholder-cor-neutra/80" placeholder="Apto, Galpão...">
-                                        </div>
-                                        <div class="md:col-span-1">
-                                            <label for="bairro" class="block text-sm font-medium text-cor-marinho/90 mb-1">Bairro *</label>
-                                            <input type="text" id="bairro" required class="w-full px-4 py-3 rounded-xl border border-cor-neutra/40 bg-cor-areia/10 focus:bg-white focus:ring-2 focus:ring-cor-destaque/40 focus:border-cor-destaque outline-none transition-all placeholder-cor-neutra/80" placeholder="Bairro">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h4 class="font-heading font-semibold text-cor-marinho border-b border-cor-areia pb-2 mb-4 mt-6 text-lg"><i class="fa-solid fa-clipboard-list mr-2 text-cor-destaque"></i>Detalhes do Pedido</h4>
-                                    
-                                    <div class="mb-4">
-                                        <label for="pagamento" class="block text-sm font-medium text-cor-marinho/90 mb-1">Meio de Pagamento Preferido *</label>
+                                        <label for="nome" class="block text-sm font-semibold text-cor-marinho mb-1.5 ml-1">Nome ou Empresa <span class="text-cor-madeira">*</span></label>
                                         <div class="relative">
-                                            <select id="pagamento" required class="w-full px-4 py-3 rounded-xl border border-cor-neutra/40 bg-cor-areia/10 focus:bg-white focus:ring-2 focus:ring-cor-destaque/40 focus:border-cor-destaque outline-none transition-all appearance-none text-cor-marinho">
+                                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-cor-neutra"><i class="fa-regular fa-id-badge"></i></div>
+                                            <input type="text" id="nome" required class="w-full pl-11 pr-4 py-3.5 rounded-xl border-2 border-transparent bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="Digite seu nome completo">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Bloco 2: Endereço Inteligente -->
+                                <div>
+                                    <h4 class="font-heading font-bold text-cor-marinho mb-4 flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-cor-areia/40 flex items-center justify-center text-cor-destaque text-sm"><i class="fa-solid fa-location-dot"></i></div> Dados de Entrega</h4>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
+                                        <!-- CEP -->
+                                        <div class="md:col-span-4 relative">
+                                            <label for="cep" class="block text-sm font-semibold text-cor-marinho mb-1.5 ml-1">CEP <span class="text-cor-madeira">*</span></label>
+                                            <div class="relative">
+                                                <input type="text" id="cep" required maxlength="9" class="w-full px-4 py-3.5 rounded-xl border-2 border-transparent bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="00000-000">
+                                                <div id="cep-loading" class="absolute inset-y-0 right-0 pr-4 flex items-center hidden text-cor-destaque"><i class="fa-solid fa-circle-notch fa-spin"></i></div>
+                                            </div>
+                                            <span id="cep-feedback" class="absolute -bottom-5 left-1 text-[11px] text-green-600 font-semibold hidden"><i class="fa-solid fa-check"></i> Encontrado!</span>
+                                        </div>
+                                        
+                                        <!-- Rua -->
+                                        <div class="md:col-span-8">
+                                            <label for="rua" class="block text-sm font-semibold text-cor-marinho mb-1.5 ml-1">Rua / Avenida <span class="text-cor-madeira">*</span></label>
+                                            <input type="text" id="rua" required class="w-full px-4 py-3.5 rounded-xl border-2 border-transparent bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="Ex: Av. Senador Levindo Coelho">
+                                        </div>
+                                        
+                                        <!-- Número -->
+                                        <div class="md:col-span-3">
+                                            <label for="numero" class="block text-sm font-semibold text-cor-marinho mb-1.5 ml-1">Número <span class="text-cor-madeira">*</span></label>
+                                            <input type="text" id="numero" required class="w-full px-4 py-3.5 rounded-xl border-2 border-transparent bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="Nº">
+                                        </div>
+                                        
+                                        <!-- Complemento -->
+                                        <div class="md:col-span-4">
+                                            <label for="complemento" class="block text-sm font-semibold text-cor-marinho mb-1.5 ml-1">Complemento</label>
+                                            <input type="text" id="complemento" class="w-full px-4 py-3.5 rounded-xl border-2 border-transparent bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="Apto, Galpão...">
+                                        </div>
+                                        
+                                        <!-- Bairro -->
+                                        <div class="md:col-span-5">
+                                            <label for="bairro" class="block text-sm font-semibold text-cor-marinho mb-1.5 ml-1">Bairro <span class="text-cor-madeira">*</span></label>
+                                            <input type="text" id="bairro" required class="w-full px-4 py-3.5 rounded-xl border-2 border-transparent bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="Seu Bairro">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Bloco 3: Pedido e Pagamento -->
+                                <div class="bg-white p-6 rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] border border-cor-areia/20">
+                                    <h4 class="font-heading font-bold text-cor-marinho mb-4 flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-cor-areia/40 flex items-center justify-center text-cor-destaque text-sm"><i class="fa-solid fa-list-check"></i></div> Resumo do Pedido</h4>
+                                    
+                                    <div class="mb-5">
+                                        <label for="pagamento" class="block text-sm font-semibold text-cor-marinho mb-1.5 ml-1">Meio de Pagamento Preferido <span class="text-cor-madeira">*</span></label>
+                                        <div class="relative">
+                                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-cor-neutra"><i class="fa-solid fa-wallet"></i></div>
+                                            <select id="pagamento" required class="w-full pl-11 pr-10 py-3.5 rounded-xl border-2 border-cor-areia/30 bg-[#fcfbf9] focus:bg-white focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all appearance-none text-cor-marinho font-medium">
                                                 <option value="" disabled selected>Selecione uma opção</option>
-                                                <option value="Pix">Pix (Mais rápido)</option>
+                                                <option value="Pix">Pix (Aprovação Imediata)</option>
                                                 <option value="Cartão de Crédito">Cartão de Crédito</option>
                                                 <option value="Cartão de Débito">Cartão de Débito</option>
-                                                <option value="Dinheiro">Dinheiro</option>
-                                                <option value="Boleto">Boleto</option>
+                                                <option value="Dinheiro">Dinheiro Físico</option>
+                                                <option value="Boleto">Boleto Bancário</option>
                                             </select>
                                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-cor-marinho">
-                                                <i class="fa-solid fa-chevron-down"></i>
+                                                <i class="fa-solid fa-chevron-down text-sm"></i>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <div class="flex justify-between items-end mb-1">
-                                            <label for="produtos" class="block text-sm font-medium text-cor-marinho/90">Lista de Produtos *</label>
-                                            <span class="text-xs text-cor-destaque font-medium"><i class="fa-solid fa-circle-info"></i> Clique nos itens do catálogo para adicionar</span>
+                                        <div class="flex justify-between items-end mb-1.5 ml-1">
+                                            <label for="produtos" class="block text-sm font-semibold text-cor-marinho">Lista de Produtos / Carrinho <span class="text-cor-madeira">*</span></label>
+                                            <span class="text-[11px] text-cor-destaque font-bold uppercase tracking-wide bg-cor-destaque/10 px-2 py-0.5 rounded-md"><i class="fa-solid fa-mouse-pointer"></i> Clique no catálogo</span>
                                         </div>
-                                        <textarea id="produtos" required rows="5" class="w-full px-4 py-3 rounded-xl border border-cor-neutra/40 bg-cor-areia/10 focus:bg-white focus:ring-2 focus:ring-cor-destaque/40 focus:border-cor-destaque outline-none transition-all resize-y placeholder-cor-neutra/80 text-cor-marinho" placeholder="Ex:&#10;- 2x Chapas MDF Branco Tx 15mm&#10;- 5x Corrediças telescópicas 45cm"></textarea>
+                                        <textarea id="produtos" required rows="6" class="w-full px-4 py-4 rounded-xl border-2 border-cor-areia/40 bg-[#fcfbf9] focus:bg-white focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all resize-y text-cor-marinho placeholder-cor-neutra leading-relaxed custom-scrollbar" placeholder="Sua lista de produtos aparecerá aqui ao clicar no catálogo acima. &#10;&#10;Você também pode digitar manualmente:&#10;Ex: 2x Chapas MDF Branco Tx 15mm&#10;Ex: 5x Corrediças telescópicas 45cm"></textarea>
                                     </div>
                                 </div>
 
-                                <div class="flex flex-col-reverse sm:flex-row gap-4 pt-4 mt-4 border-t border-cor-areia">
-                                    <button type="reset" class="w-full sm:w-1/3 px-6 py-4 rounded-xl border-2 border-cor-neutra/40 text-cor-marinho/70 font-bold hover:bg-cor-areia/30 hover:border-cor-neutra hover:text-cor-marinho transition-all text-center">
-                                        <i class="fa-solid fa-trash-can mr-2"></i> Limpar
+                                <!-- Botões de Ação -->
+                                <div class="flex flex-col-reverse sm:flex-row gap-4 pt-4 mt-2">
+                                    <button type="reset" class="w-full sm:w-1/4 px-6 py-4 rounded-xl border-2 border-cor-neutra/30 text-cor-neutra font-bold hover:bg-white hover:border-cor-madeira hover:text-cor-madeira transition-all text-center group">
+                                        <i class="fa-solid fa-eraser mr-2 group-hover:rotate-12 transition-transform"></i> Limpar
                                     </button>
-                                    <button type="submit" class="w-full sm:w-2/3 px-6 py-4 rounded-xl bg-cor-destaque hover:bg-cor-marinho text-white font-bold text-lg shadow-lg shadow-cor-destaque/30 hover:-translate-y-1 transition-all flex items-center justify-center gap-3">
+                                    <button type="submit" class="w-full sm:w-3/4 px-6 py-4 rounded-xl bg-cor-destaque hover:bg-cor-marinho text-white font-bold text-lg shadow-[0_8px_20px_rgba(20,84,156,0.3)] hover:shadow-[0_12px_25px_rgba(14,37,76,0.4)] hover:-translate-y-1 transition-all flex items-center justify-center gap-3 overflow-hidden relative group">
+                                        <!-- Efeito de brilho no botão -->
+                                        <div class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1.5s_infinite]"></div>
                                         <i class="fa-brands fa-whatsapp text-2xl"></i> Enviar Orçamento
                                     </button>
                                 </div>
@@ -313,42 +425,46 @@
             </div>
         </section>
 
-        <section id="localizacao" class="py-24 bg-white border-t border-cor-areia/50">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-cor-areia/30 text-cor-destaque text-2xl mb-6 border border-cor-areia">
+        <section id="localizacao" class="py-24 bg-cor-marinho border-t border-cor-areia/20 relative overflow-hidden">
+            <!-- Padrão visual de fundo -->
+            <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(#e3d4c4 2px, transparent 2px); background-size: 30px 30px;"></div>
+            
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <div class="lg:col-span-5 text-white">
+                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm text-cor-areia text-2xl mb-8 border border-white/20">
                             <i class="fa-solid fa-map-location-dot"></i>
                         </div>
-                        <h2 class="font-heading font-extrabold text-3xl md:text-4xl text-cor-marinho mb-6">Venha conhecer nossa loja</h2>
+                        <h2 class="font-heading font-extrabold text-3xl md:text-5xl text-white mb-8">Venha conhecer <br><span class="text-cor-areia">nossa loja</span></h2>
                         
-                        <div class="space-y-6">
-                            <div class="flex gap-4">
-                                <div class="mt-1 text-cor-madeira text-xl"><i class="fa-solid fa-location-dot"></i></div>
+                        <div class="space-y-8">
+                            <div class="flex gap-5 group">
+                                <div class="mt-1 w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-cor-areia text-xl group-hover:bg-cor-destaque transition-colors shrink-0"><i class="fa-solid fa-location-dot"></i></div>
                                 <div>
-                                    <h4 class="font-bold text-cor-marinho">Endereço</h4>
-                                    <p class="text-cor-marinho/80 leading-relaxed">Av. Senador Levindo Coelho, 1170<br>Vale do Jatobá, Belo Horizonte - MG<br>CEP: 30664-006, Brasil</p>
+                                    <h4 class="font-bold text-white text-lg mb-1">Nosso Endereço</h4>
+                                    <p class="text-cor-areia/70 leading-relaxed font-light">Av. Senador Levindo Coelho, 1170<br>Vale do Jatobá, Belo Horizonte - MG<br>CEP: 30664-006, Brasil</p>
                                 </div>
                             </div>
                             
-                            <div class="flex gap-4">
-                                <div class="mt-1 text-cor-madeira text-xl"><i class="fa-solid fa-clock"></i></div>
-                                <div class="w-full max-w-sm">
-                                    <h4 class="font-bold text-cor-marinho mb-2">Horário de Funcionamento</h4>
-                                    <div class="bg-cor-areia/20 rounded-xl border border-cor-areia p-4">
-                                        <table class="w-full text-sm text-cor-marinho/80">
+                            <div class="flex gap-5 group">
+                                <div class="mt-1 w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-cor-areia text-xl group-hover:bg-cor-destaque transition-colors shrink-0"><i class="fa-solid fa-clock"></i></div>
+                                <div class="w-full">
+                                    <h4 class="font-bold text-white text-lg mb-3">Horário de Funcionamento</h4>
+                                    <div class="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-5">
+                                        <table class="w-full text-sm text-cor-areia/80">
                                             <tbody>
-                                                <tr class="border-b border-cor-areia/70 last:border-0">
-                                                    <td class="py-2 font-medium text-cor-marinho">Segunda a Sexta</td>
-                                                    <td class="py-2 text-right">08:00 – 17:00</td>
+                                                <tr class="border-b border-white/10 last:border-0">
+                                                    <td class="py-2.5 font-medium text-white"><i class="fa-regular fa-calendar mr-2 text-cor-areia"></i>Segunda a Sexta</td>
+                                                    <td class="py-2.5 text-right font-medium">08:00 – 17:00</td>
                                                 </tr>
-                                                <tr class="border-b border-cor-areia/70 last:border-0">
-                                                    <td class="py-2 font-medium text-cor-marinho">Sábado</td>
-                                                    <td class="py-2 text-right">08:30 – 12:00</td>
+                                                <tr class="border-b border-white/10 last:border-0">
+                                                    <td class="py-2.5 font-medium text-white"><i class="fa-regular fa-calendar-check mr-2 text-cor-areia"></i>Sábado</td>
+                                                    <td class="py-2.5 text-right font-medium">08:30 – 12:00</td>
                                                 </tr>
                                                 <tr class="last:border-0">
-                                                    <td class="py-2 font-medium text-cor-madeira">Domingo</td>
-                                                    <td class="py-2 text-right text-cor-madeira font-bold">Fechado</td>
+                                                    <td class="py-2.5 font-medium text-cor-madeira"><i class="fa-regular fa-calendar-xmark mr-2"></i>Domingo</td>
+                                                    <td class="py-2.5 text-right text-cor-madeira font-bold uppercase tracking-wider text-xs">Fechado</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -358,7 +474,9 @@
                         </div>
                     </div>
 
-                    <div class="h-96 md:h-full min-h-[400px] rounded-3xl overflow-hidden shadow-xl border-4 border-white ring-1 ring-cor-areia/50">
+                    <!-- Mapa com styling Premium -->
+                    <div class="lg:col-span-7 h-[450px] lg:h-[600px] w-full rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-8 border-white/10 relative group">
+                        <div class="absolute inset-0 bg-cor-marinho/20 group-hover:bg-transparent transition-colors duration-500 pointer-events-none z-10"></div>
                         <iframe 
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3749.5074092598375!2d-44.029883599999995!3d-20.007559999999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa6bff1b5d562cd%3A0xc6b81a2b2575402!2sAv.%20Senador%20Levindo%20Coelho%2C%201170%20-%20Vale%20do%20Jatob%C3%A1%2C%20Belo%20Horizonte%20-%20MG%2C%2030664-006!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr" 
                             width="100%" 
@@ -366,7 +484,8 @@
                             style="border:0;" 
                             allowfullscreen="" 
                             loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
+                            referrerpolicy="no-referrer-when-downgrade"
+                            class="grayscale-[20%] group-hover:grayscale-0 transition-all duration-500">
                         </iframe>
                     </div>
                 </div>
@@ -374,58 +493,76 @@
         </section>
     </main>
 
-    <footer class="bg-cor-marinho text-cor-areia/70 py-12 border-t-4 border-cor-madeira">
+    <footer class="bg-[#091833] text-cor-areia/60 pt-16 pb-8 border-t-4 border-cor-destaque">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-12">
                 
-                <div class="flex items-center flex-col md:flex-row gap-4">
-                    <div class="bg-white p-2 rounded-lg inline-block">
-                        <img src="assets/images/logo.png" alt="MDF Colares" class="h-10 w-auto" onerror="this.style.display='none';">
+                <div class="flex items-center flex-col md:flex-row gap-5">
+                    <div class="bg-white p-3 rounded-xl inline-block shadow-lg">
+                        <img src="assets/images/logo.png" alt="MDF Colares" class="h-12 w-auto" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=MDF&background=0e254c&color=e3d4c4&size=100&font-size=0.4&rounded=true&bold=true';">
                     </div>
                     <div class="text-center md:text-left">
-                        <h5 class="font-heading font-bold text-white text-xl">MDF Colares</h5>
-                        <p class="text-sm text-cor-areia/50">Soluções completas para marcenaria.</p>
+                        <h5 class="font-heading font-bold text-white text-2xl tracking-tight mb-1">MDF Colares</h5>
+                        <p class="text-sm font-light text-cor-areia/50">A verdadeira parceria da sua marcenaria.</p>
                     </div>
                 </div>
 
                 <div class="flex gap-4">
-                    <a href="https://instagram.com/mdf.colares" target="_blank" class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-pink-500 hover:to-purple-600 transition-all duration-300">
-                        <i class="fa-brands fa-instagram text-xl"></i>
+                    <a href="https://instagram.com/mdf.colares" target="_blank" aria-label="Instagram" class="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center text-white hover:scale-110 hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] transition-all duration-300 shadow-md">
+                        <i class="fa-brands fa-instagram text-2xl"></i>
                     </a>
-                    <a href="https://wa.me/5531988251010" target="_blank" class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-green-500 transition-all duration-300">
-                        <i class="fa-brands fa-whatsapp text-xl"></i>
+                    <a href="https://wa.me/5531988251010" target="_blank" aria-label="WhatsApp" class="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center text-white hover:scale-110 hover:bg-[#25D366] transition-all duration-300 shadow-md">
+                        <i class="fa-brands fa-whatsapp text-2xl"></i>
                     </a>
-                    <a href="mailto:madeireira.colares@gmail.com" class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-cor-destaque transition-all duration-300">
-                        <i class="fa-regular fa-envelope text-xl"></i>
+                    <a href="mailto:madeireira.colares@gmail.com" aria-label="Email" class="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center text-white hover:scale-110 hover:bg-cor-destaque transition-all duration-300 shadow-md">
+                        <i class="fa-regular fa-envelope text-2xl"></i>
                     </a>
                 </div>
             </div>
             
-            <div class="border-t border-white/10 mt-8 pt-8 text-center text-sm text-cor-neutra flex flex-col md:flex-row justify-between items-center">
-                <p>&copy; 2024 MDF Colares. Todos os direitos reservados.</p>
-                <p class="mt-2 md:mt-0">Desenvolvido com foco na experiência do marceneiro.</p>
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-sm gap-4">
+                <p>&copy; 2026 MDF Colares. Todos os direitos reservados.</p>
+                
+                <!-- Assinatura DevDuo (Conforme solicitado) -->
+                <p class="flex items-center gap-1.5 font-medium text-cor-areia/40">
+                    Criado com <i class="fa-solid fa-heart text-cor-madeira text-xs animate-pulse"></i> pela 
+                    <a href="https://devduo.tec.br/" target="_blank" rel="noopener noreferrer" class="text-cor-areia hover:text-white transition-colors border-b border-transparent hover:border-white font-bold ml-1">
+                        DevDuo
+                    </a>
+                </p>
             </div>
         </div>
     </footer>
 
-    <a href="https://wa.me/5531988251010?text=Ol%C3%A1,%20gostaria%20de%20solicitar%20um%20or%C3%A7amento." target="_blank" class="fixed bottom-6 right-6 w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center text-3xl shadow-2xl z-[60] hover:scale-110 hover:bg-green-600 transition-transform duration-300 animate-bounce focus:outline-none focus:ring-4 focus:ring-green-500/50" aria-label="Fale conosco no WhatsApp">
-        <i class="fa-brands fa-whatsapp"></i>
+    <!-- Carrinho Flutuante (Aparece ao adicionar itens) -->
+    <a href="#orcamento" id="floating-cart" class="fixed bottom-24 right-6 bg-cor-marinho text-white px-5 py-3 rounded-full shadow-2xl z-[60] flex items-center gap-3 transition-all duration-500 opacity-0 translate-y-10 pointer-events-none hover:bg-cor-destaque border border-white/10">
+        <div class="relative">
+            <i class="fa-solid fa-cart-shopping text-xl"></i>
+            <span id="cart-badge" class="absolute -top-2 -right-3 bg-cor-madeira text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-cor-marinho">0</span>
+        </div>
+        <span class="font-heading font-bold text-sm">Ver Orçamento</span>
+    </a>
+
+    <!-- Botão Fixo WhatsApp Principal -->
+    <a href="https://wa.me/5531988251010?text=Ol%C3%A1,%20gostaria%20de%20solicitar%20um%20or%C3%A7amento." target="_blank" class="fixed bottom-6 right-6 w-16 h-16 bg-[#25D366] text-white rounded-full flex items-center justify-center text-3xl shadow-[0_4px_20px_rgba(37,211,102,0.4)] z-[60] hover:scale-110 hover:bg-[#20bd5a] transition-all duration-300 group" aria-label="Fale conosco no WhatsApp">
+        <i class="fa-brands fa-whatsapp group-hover:animate-ping absolute opacity-0 group-hover:opacity-40"></i>
+        <i class="fa-brands fa-whatsapp relative z-10"></i>
     </a>
 
     <script>
-        // Dados Estruturados do Catálogo
+        // 1. Dados Estruturados do Catálogo de Produtos
         const catalogo = {
             'grid-quimicos': [
                 { nome: "Adesivo instantâneo TekBond - 20g", icone: "fa-spray-can" },
                 { nome: "Adesivo instantâneo TekBond 100g", icone: "fa-spray-can" },
-                { nome: "Adesivo instantâneo Kisafix 20G", icone: "fa-spray-can" },
-                { nome: "Adesivo instantâneo Kisafix 100g", icone: "fa-spray-can" },
+                { nome: "Adesivo instantâneo Kisafix 20G", icone: "fa-bottle-droplet" },
+                { nome: "Adesivo instantâneo Kisafix 100g", icone: "fa-bottle-droplet" },
                 { nome: "Cola Fórmica - 750g", icone: "fa-fill-drip" },
                 { nome: "Cola Fórmica - 2,8 Kg", icone: "fa-fill-drip" },
                 { nome: "Cola contato KisaFix 2,8 Kg", icone: "fa-fill-drip" },
                 { nome: "Cola branca PVA Extra 1KG", icone: "fa-bottle-droplet" },
                 { nome: "Cola granulada Jowat 2KGa", icone: "fa-box-open" },
-                { nome: "Silicone branco/transparente - 280g", icone: "fa-syringe" },
+                { nome: "Silicone branco/transparente 280g", icone: "fa-syringe" },
                 { nome: "Selante acrílico Kisafix", icone: "fa-syringe" },
                 { nome: "Espuma expansiva Kisafix", icone: "fa-spray-can-sparkles" },
                 { nome: "Thinner / Aguarrás - 900Ml", icone: "fa-bottle-water" },
@@ -433,8 +570,8 @@
             ],
             'grid-ferragens': [
                 { nome: "Dobradiça S85/165 c/ cálcio 2,0", icone: "fa-door-open" },
-                { nome: "Corrediça telescópica (25cm à 60cm)", icone: "fa-arrows-left-right" },
-                { nome: "Corrediça Branca (25cm à 45cm)", icone: "fa-arrows-left-right" },
+                { nome: "Corrediça telescópica (25 a 60cm)", icone: "fa-arrows-left-right" },
+                { nome: "Corrediça Branca (25 a 45cm)", icone: "fa-arrows-left-right" },
                 { nome: "Rodízios com freio e sem freio", icone: "fa-circle-notch" },
                 { nome: "Kit Porta Correr SP10 80KG", icone: "fa-door-closed" }
             ],
@@ -442,8 +579,8 @@
                 { nome: "Suporte mesa tampo retrátil 40cm", icone: "fa-ruler-combined" },
                 { nome: "Suporte mesa tampo retrátil 35cm", icone: "fa-ruler-combined" },
                 { nome: "Suporte aéreo", icone: "fa-angle-up" },
-                { nome: "Suporte invisível de 10CM à 35CM", icone: "fa-ruler" },
-                { nome: "Cantoneira 5mm de 3 furos branca", icone: "fa-link" },
+                { nome: "Suporte invisível (10 a 35cm)", icone: "fa-ruler" },
+                { nome: "Cantoneira 5mm 3 furos branca", icone: "fa-link" },
                 { nome: "Cantoneira 13x13", icone: "fa-link" }
             ],
             'grid-puxadores': [
@@ -459,8 +596,8 @@
                 { nome: "Fechadura Pressão 19x22", icone: "fa-lock" },
                 { nome: "Fechadura Gaveta c/ batente 17x22", icone: "fa-lock" },
                 { nome: "Fechadura Gaveta c/ batente 17x31", icone: "fa-lock" },
-                { nome: "Parafusos de parede Jomarca", icone: "fa-screwdriver" },
-                { nome: "Parafusos Jomarca (Diversos tamanhos)", icone: "fa-screw" },
+                { nome: "Parafusos parede Jomarca", icone: "fa-screwdriver" },
+                { nome: "Parafusos Jomarca Diversos", icone: "fa-screw" },
                 { nome: "Kit Mi-62", icone: "fa-toolbox" }
             ],
             'grid-ferramentas': [
@@ -482,21 +619,23 @@
             ]
         };
 
-        // Renderiza os produtos nas abas
+        let itemsNoCarrinho = 0;
+
+        // 2. Renderização Inteligente das Abas
         window.addEventListener('DOMContentLoaded', () => {
             Object.keys(catalogo).forEach(gridId => {
                 const gridElement = document.getElementById(gridId);
                 let htmlContent = '';
                 catalogo[gridId].forEach(produto => {
                     htmlContent += `
-                        <div class="group bg-white border border-cor-neutra/30 rounded-2xl overflow-hidden hover:border-cor-destaque/60 hover:shadow-lg transition-all duration-300 flex flex-col h-full cursor-pointer relative" onclick="adicionarAoOrcamento('${produto.nome}')" title="Adicionar ${produto.nome} ao orçamento">
-                            <div class="aspect-[4/3] bg-cor-areia/10 p-6 flex items-center justify-center border-b border-cor-neutra/20 overflow-hidden relative">
-                                <i class="fa-solid ${produto.icone} text-4xl text-cor-neutra/60 group-hover:scale-125 group-hover:text-cor-destaque/40 transition-all duration-500"></i>
+                        <div class="group bg-white border border-cor-areia/40 rounded-2xl overflow-hidden hover:border-cor-destaque/60 hover:shadow-card transition-all duration-300 flex flex-col h-full cursor-pointer relative" onclick="adicionarAoOrcamento('${produto.nome}')" title="Adicionar ao orçamento">
+                            <div class="aspect-[4/3] bg-gradient-to-br from-cor-areia/10 to-transparent p-6 flex items-center justify-center border-b border-cor-areia/20 relative overflow-hidden">
+                                <i class="fa-solid ${produto.icone} text-4xl text-cor-neutra/50 group-hover:scale-125 group-hover:text-cor-destaque/40 transition-all duration-500"></i>
                                 <div class="absolute inset-0 bg-cor-destaque/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             </div>
-                            <div class="p-4 flex-grow flex flex-col justify-between bg-white z-10">
-                                <h4 class="font-semibold text-cor-marinho text-sm leading-tight mb-3">${produto.nome}</h4>
-                                <span class="inline-flex items-center gap-1.5 text-cor-destaque text-xs font-bold uppercase tracking-wider group-hover:text-cor-madeira transition-colors mt-auto"><i class="fa-solid fa-cart-plus text-base"></i> Incluir</span>
+                            <div class="p-4 sm:p-5 flex-grow flex flex-col justify-between bg-white z-10">
+                                <h4 class="font-semibold text-cor-marinho text-[13px] sm:text-sm leading-tight mb-4 group-hover:text-cor-destaque transition-colors">${produto.nome}</h4>
+                                <span class="inline-flex items-center justify-center w-full py-2 rounded-lg bg-cor-areia/10 text-cor-destaque text-xs font-bold uppercase tracking-wider group-hover:bg-cor-destaque group-hover:text-white transition-colors mt-auto"><i class="fa-solid fa-plus mr-1"></i> Adicionar</span>
                             </div>
                         </div>
                     `;
@@ -505,85 +644,130 @@
             });
         });
 
-        // Alternar Abas do Catálogo
+        // 3. Sistema de Navegação em Abas (Tab System)
         function openCategory(evt, categoryName) {
             const tabContents = document.getElementsByClassName("tab-content");
             for (let i = 0; i < tabContents.length; i++) {
                 tabContents[i].classList.add("hidden");
-                tabContents[i].classList.remove("block", "animate-fadeInTab");
+                tabContents[i].classList.remove("block", "animate-fadeInScale");
             }
 
             const tabBtns = document.getElementsByClassName("tab-btn");
             for (let i = 0; i < tabBtns.length; i++) {
-                tabBtns[i].classList.remove("text-cor-marinho", "border-cor-destaque", "bg-cor-areia/30");
-                tabBtns[i].classList.add("text-cor-neutra", "border-transparent");
+                // Reset styling das Pílulas
+                tabBtns[i].classList.remove("bg-cor-marinho", "text-white", "border-cor-marinho");
+                tabBtns[i].classList.add("bg-white", "text-cor-neutra", "border-cor-areia/50");
             }
 
             const activeTab = document.getElementById(categoryName);
             activeTab.classList.remove("hidden");
-            activeTab.classList.add("block", "animate-fadeInTab");
+            activeTab.classList.add("block", "animate-fadeInScale");
             
-            evt.currentTarget.classList.remove("text-cor-neutra", "border-transparent");
-            evt.currentTarget.classList.add("text-cor-marinho", "border-cor-destaque", "bg-cor-areia/30");
+            // Ativar Pílula Clicada
+            evt.currentTarget.classList.remove("bg-white", "text-cor-neutra", "border-cor-areia/50");
+            evt.currentTarget.classList.add("bg-cor-marinho", "text-white", "border-cor-marinho");
         }
 
-        // Adicionar Produto ao Formulário
+        // 4. UX Premium: Adicionar ao Carrinho & Toast Notification
         function adicionarAoOrcamento(nomeProduto) {
             const textarea = document.getElementById('produtos');
             
-            if(textarea.value.length > 0 && !textarea.value.endsWith('\n')) {
+            // Formatação inteligente da lista
+            if(textarea.value.length === 0 || textarea.value === textarea.placeholder) {
+                textarea.value = ''; // limpa se for placeholder
+            } else if (!textarea.value.endsWith('\n')) {
                 textarea.value += '\n';
             }
             textarea.value += `- 1x ${nomeProduto}\n`;
             
-            // Feedback Visual na Caixa de Texto baseado na paleta
-            textarea.classList.remove('border-cor-neutra/40', 'bg-cor-areia/10');
-            textarea.classList.add('ring-4', 'ring-cor-destaque/40', 'border-cor-destaque', 'bg-cor-destaque/5');
+            itemsNoCarrinho++;
             
+            // Feedback Visual na Caixa de Texto
+            textarea.classList.remove('border-cor-areia/40');
+            textarea.classList.add('pulse-border', 'border-cor-destaque', 'bg-cor-destaque/5');
             setTimeout(() => {
-                textarea.classList.remove('ring-4', 'ring-cor-destaque/40', 'border-cor-destaque', 'bg-cor-destaque/5');
-                textarea.classList.add('border-cor-neutra/40', 'bg-cor-areia/10');
-            }, 800);
+                textarea.classList.remove('pulse-border', 'border-cor-destaque', 'bg-cor-destaque/5');
+                textarea.classList.add('border-cor-areia/40');
+            }, 1500);
 
-            document.getElementById('orcamento').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Mostrar Toast Notification
+            showToast(nomeProduto);
+            
+            // Mostrar/Atualizar botão de carrinho flutuante
+            const cartBtn = document.getElementById('floating-cart');
+            const cartBadge = document.getElementById('cart-badge');
+            cartBadge.innerText = itemsNoCarrinho;
+            cartBtn.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
         }
 
-        // Script Principal (ViaCEP + WhatsApp)
+        function showToast(nomeProduto) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast-enter bg-white border-l-4 border-cor-destaque shadow-[0_10px_30px_rgba(0,0,0,0.1)] rounded-r-xl p-4 flex items-center gap-4 w-72 sm:w-80';
+            toast.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 shrink-0">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <div>
+                    <h5 class="text-xs font-bold text-cor-neutra uppercase tracking-wider mb-0.5">Adicionado!</h5>
+                    <p class="text-sm font-semibold text-cor-marinho truncate w-48">${nomeProduto}</p>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.replace('toast-enter', 'toast-exit');
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
+        }
+
+        // 5. Integração ViaCEP e Lógica de Envio para WhatsApp
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('form-orcamento');
             const cepInput = document.getElementById('cep');
+            const cepLoading = document.getElementById('cep-loading');
             const cepFeedback = document.getElementById('cep-feedback');
 
+            // Máscara básica do CEP
             cepInput.addEventListener('input', function(e) {
                 let v = e.target.value.replace(/\D/g, "");
                 v = v.replace(/^(\d{5})(\d)/, "$1-$2");
                 e.target.value = v;
             });
 
+            // ViaCEP
             cepInput.addEventListener('blur', function() {
                 let cep = this.value.replace(/\D/g, '');
                 
                 if (cep.length === 8) {
+                    cepLoading.classList.remove('hidden');
+                    
                     fetch(`https://viacep.com.br/ws/${cep}/json/`)
                         .then(response => response.json())
                         .then(data => {
+                            cepLoading.classList.add('hidden');
                             if (!data.erro) {
                                 document.getElementById('rua').value = data.logradouro;
                                 document.getElementById('bairro').value = data.bairro;
-                                document.getElementById('numero').focus();
+                                document.getElementById('numero').focus(); // UX: Foca no número automaticamente
                                 
                                 cepFeedback.classList.remove('hidden');
-                                cepInput.classList.add('border-cor-destaque', 'bg-cor-destaque/5');
+                                cepInput.classList.add('border-green-500', 'bg-green-50');
                                 setTimeout(() => {
                                     cepFeedback.classList.add('hidden');
-                                    cepInput.classList.remove('border-cor-destaque', 'bg-cor-destaque/5');
+                                    cepInput.classList.remove('border-green-500', 'bg-green-50');
                                 }, 3000);
                             }
                         })
-                        .catch(err => console.error("Erro ao buscar CEP", err));
+                        .catch(err => {
+                            cepLoading.classList.add('hidden');
+                            console.error("Erro ViaCEP", err);
+                        });
                 }
             });
 
+            // Envio para WhatsApp Inteligente
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
 
@@ -596,19 +780,35 @@
                 const pagamento = document.getElementById('pagamento').value;
                 const produtos = document.getElementById('produtos').value.trim();
 
-                let mensagem = `*NOVO PEDIDO DE ORÇAMENTO* 📝\n\n`;
-                mensagem += `👤 *DADOS DO CLIENTE*\nNome: ${nome}\n\n`;
-                mensagem += `📍 *ENDEREÇO DE ENTREGA*\nCEP: ${cep}\n${rua}, Nº ${numero}`;
+                // Montagem elegante da string (%0A = quebra de linha no URL)
+                let mensagem = `*NOVO PEDIDO DE ORÇAMENTO | MDF COLARES* 📝\n\n`;
+                mensagem += `👤 *DADOS DO CLIENTE*\n`;
+                mensagem += `Nome: ${nome}\n\n`;
+                
+                mensagem += `📍 *ENDEREÇO DE ENTREGA*\n`;
+                mensagem += `CEP: ${cep}\n`;
+                mensagem += `${rua}, Nº ${numero}`;
                 if(complemento) mensagem += ` - ${complemento}`;
                 mensagem += `\nBairro: ${bairro}\n\n`;
-                mensagem += `💳 *PAGAMENTO*\nMétodo preferido: ${pagamento}\n\n`;
-                mensagem += `🛒 *LISTA DE PRODUTOS*\n${produtos}\n\n`;
-                mensagem += `_Enviado pelo site MDF Colares_`;
+                
+                mensagem += `💳 *PREFERÊNCIA DE PAGAMENTO*\n`;
+                mensagem += `Método: ${pagamento}\n\n`;
+                
+                mensagem += `🛒 *LISTA DE PRODUTOS*\n`;
+                mensagem += `\`\`\`\n${produtos}\n\`\`\`\n\n`;
+                
+                mensagem += `_Atendimento iniciado via Site Oficial._`;
 
                 const mensagemCodificada = encodeURIComponent(mensagem);
                 const url = `https://wa.me/5531988251010?text=${mensagemCodificada}`;
                 
                 window.open(url, '_blank');
+            });
+            
+            // Limpar formulário reseta o carrinho flutuante
+            form.addEventListener('reset', function() {
+                itemsNoCarrinho = 0;
+                document.getElementById('floating-cart').classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
             });
         });
     </script>
