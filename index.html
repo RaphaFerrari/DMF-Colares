@@ -521,7 +521,7 @@
             </div>
             
             <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-sm gap-4">
-                <p>&copy; 2026 MDF Colares. Todos os direitos reservados.</p>
+                <p>&copy; 2024 MDF Colares. Todos os direitos reservados.</p>
                 
                 <!-- Assinatura DevDuo (Conforme solicitado) -->
                 <p class="flex items-center gap-1.5 font-medium text-cor-areia/40">
@@ -810,6 +810,34 @@
                 itemsNoCarrinho = 0;
                 document.getElementById('floating-cart').classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
             });
+        });
+
+        // 6. UX Premium: Drag to Scroll para o Menu de Categorias (Permite arrastar no PC)
+        const slider = document.getElementById('category-menu');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            slider.classList.add('active:cursor-grabbing');
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+        slider.addEventListener('mouseleave', () => {
+            isDown = false;
+            slider.classList.remove('active:cursor-grabbing');
+        });
+        slider.addEventListener('mouseup', () => {
+            isDown = false;
+            slider.classList.remove('active:cursor-grabbing');
+        });
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault(); // Previne seleção de texto acidental
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 2; // Velocidade da rolagem (Multiplicador)
+            slider.scrollLeft = scrollLeft - walk;
         });
     </script>
 </body>
