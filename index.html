@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MDF Colares | Soluções Completas para Marcenaria</title>
     
-    <!-- Favicon com fallback (se falhar, não quebra a página) -->
-    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <!-- Favicon (Caminho corrigido para a raiz) -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <!-- Fontes Premium -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +19,6 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Configuração da Paleta de Cores da Marca -->
     <script>
         tailwind.config = {
             theme: {
@@ -38,6 +37,7 @@
                     boxShadow: {
                         'premium': '0 10px 40px -10px rgba(14, 37, 76, 0.15)',
                         'card': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'pill': '0 2px 10px rgba(0,0,0,0.05)',
                     }
                 }
             }
@@ -45,7 +45,7 @@
     </script>
 
     <style>
-        /* Estilização da Barra de Rolagem */
+        /* Estilização da Barra de Rolagem Principal */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #fcfbf9; }
         ::-webkit-scrollbar-thumb { background: #b0a094; border-radius: 4px; }
@@ -55,9 +55,15 @@
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
-        /* Ocultar barra de rolagem horizontal nas abas (Clean UI) */
+        /* Ocultar barra de rolagem horizontal nas abas sem quebrar o layout */
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Correção do corte do menu: Garante que elementos filhos não cortem a sombra no scroll */
+        .scroll-container-padding {
+            padding: 10px 1rem;
+            margin: -10px -1rem;
+        }
         
         /* Animações Customizadas */
         @keyframes fadeInScale {
@@ -79,9 +85,7 @@
         .toast-exit { animation: slideOutRight 0.3s ease-in forwards; }
 
         /* Efeito Textarea Focus Pulse */
-        .pulse-border {
-            animation: pulseBorder 1.5s ease-out;
-        }
+        .pulse-border { animation: pulseBorder 1.5s ease-out; }
         @keyframes pulseBorder {
             0% { box-shadow: 0 0 0 0 rgba(20, 84, 156, 0.4); }
             70% { box-shadow: 0 0 0 10px rgba(20, 84, 156, 0); }
@@ -94,13 +98,14 @@
     <!-- Toast Notification Container -->
     <div id="toast-container" class="fixed top-24 right-4 z-[70] flex flex-col gap-3 pointer-events-none"></div>
 
-    <header class="fixed top-0 w-full bg-white/90 backdrop-blur-md shadow-sm z-50 border-b border-cor-areia/50 transition-all duration-300">
+    <header class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50 border-b border-cor-areia/50 transition-all duration-300">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <!-- Logo com Fallback Inteligente (Avatar gerado caso não encontre a imagem real) -->
+                
+                <!-- Logo com caminho corrigido (raiz) e fallback inteligente -->
                 <div class="flex-shrink-0 flex items-center">
                     <a href="#" class="flex items-center gap-3 transition-transform hover:scale-105">
-                        <img src="assets/images/logo.png" 
+                        <img src="logo.png" 
                              alt="Logo MDF Colares" 
                              class="h-12 w-auto object-contain rounded-md" 
                              onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=MDF+Colares&background=0e254c&color=e3d4c4&size=150&font-size=0.33&rounded=true&bold=true';">
@@ -108,15 +113,15 @@
                 </div>
 
                 <nav class="hidden md:flex space-x-10">
-                    <a href="#servicos" class="font-heading font-semibold text-cor-marinho hover:text-cor-destaque relative group py-2">
-                        Nossos Serviços
+                    <a href="#servicos" class="font-heading font-semibold text-cor-marinho hover:text-cor-destaque relative group py-2 transition-colors">
+                        Serviços
                         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cor-destaque transition-all duration-300 group-hover:w-full"></span>
                     </a>
-                    <a href="#catalogo" class="font-heading font-semibold text-cor-marinho hover:text-cor-destaque relative group py-2">
-                        Catálogo Completo
+                    <a href="#catalogo" class="font-heading font-semibold text-cor-marinho hover:text-cor-destaque relative group py-2 transition-colors">
+                        Catálogo
                         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cor-destaque transition-all duration-300 group-hover:w-full"></span>
                     </a>
-                    <a href="#localizacao" class="font-heading font-semibold text-cor-marinho hover:text-cor-destaque relative group py-2">
+                    <a href="#localizacao" class="font-heading font-semibold text-cor-marinho hover:text-cor-destaque relative group py-2 transition-colors">
                         Localização
                         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cor-destaque transition-all duration-300 group-hover:w-full"></span>
                     </a>
@@ -124,10 +129,11 @@
 
                 <div class="hidden md:flex items-center">
                     <a href="#orcamento" class="bg-cor-destaque hover:bg-cor-marinho text-white font-heading font-bold py-3 px-7 rounded-full shadow-[0_8px_20px_rgba(20,84,156,0.25)] hover:shadow-[0_10px_25px_rgba(14,37,76,0.3)] hover:-translate-y-1 transition-all duration-300 flex items-center gap-2">
-                        <i class="fa-solid fa-calculator text-lg"></i> Orçamento
+                        <i class="fa-solid fa-calculator text-lg"></i> Fazer Orçamento
                     </a>
                 </div>
 
+                <!-- Menu Mobile -->
                 <div class="md:hidden flex items-center">
                     <a href="#orcamento" class="bg-cor-destaque text-white p-3 rounded-full shadow-lg transition-transform active:scale-95"><i class="fa-solid fa-calculator"></i></a>
                 </div>
@@ -137,33 +143,32 @@
 
     <main class="flex-grow pt-20">
         <section class="relative bg-cor-marinho h-[85vh] min-h-[600px] flex items-center overflow-hidden">
-            <!-- Background Image com Fallback para Unsplash de Alta Qualidade -->
-            <div class="absolute inset-0 z-0">
-                <img src="assets/images/banner.png" 
+            <!-- Background Image (Caminho corrigido para a raiz) -->
+            <div class="absolute inset-0 z-0 bg-cor-marinho">
+                <img src="banner.png" 
                      alt="Oficina de Marcenaria" 
-                     class="w-full h-full object-cover object-center scale-105 animate-[pulse_20s_ease-in-out_infinite_alternate]" 
+                     class="w-full h-full object-cover object-center scale-105 animate-[pulse_20s_ease-in-out_infinite_alternate] opacity-60 mix-blend-overlay" 
                      onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1540659805408-fbf8f54b17b2?q=80&w=2000&auto=format&fit=crop';">
-                <!-- Overlay Gradiente Elegante -->
-                <div class="absolute inset-0 bg-gradient-to-r from-cor-marinho via-cor-marinho/90 to-transparent"></div>
-                <div class="absolute inset-0 bg-gradient-to-t from-cor-marinho/50 to-transparent"></div>
+                <!-- Overlays -->
+                <div class="absolute inset-0 bg-gradient-to-r from-cor-marinho via-cor-marinho/80 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-cor-marinho/80 via-transparent to-transparent"></div>
             </div>
 
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div class="max-w-3xl animate-fadeInScale">
-                    <div class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-cor-areia font-medium text-sm tracking-wide mb-6">
+                    <div class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-cor-areia font-medium text-sm tracking-wide mb-6 shadow-lg">
                         <span class="w-2 h-2 rounded-full bg-cor-areia animate-pulse"></span> Excelência em Marcenaria
                     </div>
                     
-                    <h1 class="text-4xl md:text-5xl lg:text-7xl font-heading font-extrabold text-white leading-[1.1] mb-6 tracking-tight">
-                        Soluções Completas <br /> para a sua <span class="text-transparent bg-clip-text bg-gradient-to-r from-cor-areia to-[#fff0e0] relative inline-block">
+                    <h1 class="text-4xl md:text-5xl lg:text-7xl font-heading font-extrabold text-white leading-[1.1] mb-6 tracking-tight drop-shadow-md">
+                        Soluções Completas <br /> para o seu <span class="text-transparent bg-clip-text bg-gradient-to-r from-cor-areia to-[#fff0e0] relative inline-block">
                             Projeto
-                            <!-- Detalhe do traço embaixo da palavra -->
                             <svg class="absolute -bottom-3 left-0 w-full h-3 text-cor-madeira opacity-90" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="5" fill="transparent" stroke-linecap="round"/></svg>
                         </span>
                     </h1>
                     
-                    <p class="text-lg md:text-2xl text-cor-areia/90 mb-10 font-light max-w-2xl leading-relaxed">
-                        Do plano de corte milimétrico às ferragens de alto padrão. Encontre tudo o que seu projeto exige em um só lugar.
+                    <p class="text-lg md:text-2xl text-cor-areia/90 mb-10 font-light max-w-2xl leading-relaxed drop-shadow-sm">
+                        Do plano de corte milimétrico às ferragens de alto padrão. Encontre tudo o que seu projeto exige em um só lugar com agilidade e precisão.
                     </p>
                     
                     <div class="flex flex-col sm:flex-row gap-5">
@@ -182,32 +187,30 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 
                 <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-cor-destaque font-bold text-sm tracking-widest uppercase mb-2 block"><i class="fa-solid fa-star text-cor-madeira mr-1"></i> Nossos Diferenciais</span>
                     <h2 class="font-heading font-bold text-3xl md:text-4xl text-cor-marinho mb-4">A Base do Seu Sucesso</h2>
                     <p class="text-cor-neutra text-lg">Nosso compromisso é entregar qualidade em cada detalhe, otimizando o tempo de produção da sua marcenaria.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Card 1 -->
-                    <div class="bg-[#fcfbf9] rounded-3xl p-8 border border-cor-areia/40 hover:border-cor-destaque/30 shadow-card hover:shadow-premium transition-all duration-300 group hover:-translate-y-2">
-                        <div class="w-16 h-16 rounded-2xl bg-cor-marinho/5 text-cor-marinho flex items-center justify-center text-3xl mb-6 group-hover:bg-cor-destaque group-hover:text-white transition-colors duration-300">
+                    <div class="bg-[#fcfbf9] rounded-3xl p-8 border border-cor-areia/50 hover:border-cor-destaque/40 shadow-card hover:shadow-premium transition-all duration-300 group hover:-translate-y-2">
+                        <div class="w-16 h-16 rounded-2xl bg-cor-marinho/5 text-cor-marinho flex items-center justify-center text-3xl mb-6 group-hover:bg-cor-destaque group-hover:text-white transition-colors duration-300 shadow-sm">
                             <i class="fa-solid fa-ruler-combined"></i>
                         </div>
                         <h3 class="font-heading font-bold text-2xl text-cor-marinho mb-3">Corte & Usinagem</h3>
-                        <p class="text-cor-neutra leading-relaxed">Planos de corte com precisão milimétrica e usinagens perfeitas para encaixes impecáveis. Reduza o desperdício de chapas.</p>
+                        <p class="text-cor-neutra leading-relaxed">Planos de corte com precisão milimétrica e usinagens perfeitas para encaixes impecáveis. Reduza o desperdício.</p>
                     </div>
 
-                    <!-- Card 2 -->
-                    <div class="bg-[#fcfbf9] rounded-3xl p-8 border border-cor-areia/40 hover:border-cor-destaque/30 shadow-card hover:shadow-premium transition-all duration-300 group hover:-translate-y-2">
-                        <div class="w-16 h-16 rounded-2xl bg-cor-madeira/10 text-cor-madeira flex items-center justify-center text-3xl mb-6 group-hover:bg-cor-madeira group-hover:text-white transition-colors duration-300">
+                    <div class="bg-[#fcfbf9] rounded-3xl p-8 border border-cor-areia/50 hover:border-cor-destaque/40 shadow-card hover:shadow-premium transition-all duration-300 group hover:-translate-y-2">
+                        <div class="w-16 h-16 rounded-2xl bg-cor-madeira/10 text-cor-madeira flex items-center justify-center text-3xl mb-6 group-hover:bg-cor-madeira group-hover:text-white transition-colors duration-300 shadow-sm">
                             <i class="fa-solid fa-layer-group"></i>
                         </div>
                         <h3 class="font-heading font-bold text-2xl text-cor-marinho mb-3">Filetamento</h3>
                         <p class="text-cor-neutra leading-relaxed">Acabamento superior de bordas com maquinário de alta tecnologia, garantindo colagem resistente e estética refinada.</p>
                     </div>
 
-                    <!-- Card 3 -->
-                    <div class="bg-[#fcfbf9] rounded-3xl p-8 border border-cor-areia/40 hover:border-cor-destaque/30 shadow-card hover:shadow-premium transition-all duration-300 group hover:-translate-y-2">
-                        <div class="w-16 h-16 rounded-2xl bg-cor-destaque/10 text-cor-destaque flex items-center justify-center text-3xl mb-6 group-hover:bg-cor-destaque group-hover:text-white transition-colors duration-300">
+                    <div class="bg-[#fcfbf9] rounded-3xl p-8 border border-cor-areia/50 hover:border-cor-destaque/40 shadow-card hover:shadow-premium transition-all duration-300 group hover:-translate-y-2">
+                        <div class="w-16 h-16 rounded-2xl bg-cor-destaque/10 text-cor-destaque flex items-center justify-center text-3xl mb-6 group-hover:bg-cor-destaque group-hover:text-white transition-colors duration-300 shadow-sm">
                             <i class="fa-solid fa-toolbox"></i>
                         </div>
                         <h3 class="font-heading font-bold text-2xl text-cor-marinho mb-3">Tudo em Ferragens</h3>
@@ -221,59 +224,53 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
                 
                 <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-                    <div class="max-w-2xl">
-                        <span class="text-cor-destaque font-bold text-sm tracking-widest uppercase mb-2 block"><i class="fa-solid fa-store mr-1"></i> Catálogo de Produtos</span>
+                    <div class="max-w-3xl">
+                        <span class="text-cor-destaque font-bold text-sm tracking-widest uppercase mb-2 block"><i class="fa-solid fa-store mr-1 text-cor-madeira"></i> Catálogo Completo</span>
                         <h2 class="font-heading font-extrabold text-3xl md:text-5xl text-cor-marinho mb-4">Tudo o que seu projeto precisa</h2>
-                        <p class="text-cor-neutra text-lg">Navegue pelas categorias e <strong class="text-cor-marinho font-semibold">clique nos produtos</strong> para adicioná-los instantaneamente à sua lista de orçamento.</p>
+                        <p class="text-cor-neutra text-lg">Navegue pelas categorias e <strong class="text-cor-marinho font-semibold bg-cor-areia/30 px-2 py-0.5 rounded">clique nos produtos</strong> para adicioná-los instantaneamente à sua lista de orçamento.</p>
                     </div>
                 </div>
 
-                <!-- Fix: Menu Cortado resolvido usando Pílulas (Pills) e gap-3 com padding -->
-                <div class="flex overflow-x-auto gap-3 pb-4 mb-8 scrollbar-hide snap-x -mx-4 px-4 sm:mx-0 sm:px-0 relative z-10">
-                    <button class="tab-btn snap-start shrink-0 px-6 py-3 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-cor-marinho text-white shadow-md border border-cor-marinho flex items-center gap-2" onclick="openCategory(event, 'cat-quimicos')">
-                        <i class="fa-solid fa-spray-can"></i> Químicos e Colas
-                    </button>
+                <!-- Menu de Abas (Pills) com Drag to Scroll Melhorado -->
+                <div class="relative mb-10 group">
+                    <!-- Sombra indicadora de scroll -->
+                    <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-cor-areia/30 to-transparent z-10 pointer-events-none md:hidden"></div>
                     
-                    <button class="tab-btn snap-start shrink-0 px-6 py-3 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-white text-cor-neutra hover:bg-cor-areia/30 border border-cor-areia/50 hover:text-cor-marinho flex items-center gap-2" onclick="openCategory(event, 'cat-ferragens')">
-                        <i class="fa-solid fa-door-open"></i> Ferragens & Corrediças
-                    </button>
-                    
-                    <button class="tab-btn snap-start shrink-0 px-6 py-3 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-white text-cor-neutra hover:bg-cor-areia/30 border border-cor-areia/50 hover:text-cor-marinho flex items-center gap-2" onclick="openCategory(event, 'cat-suportes')">
-                        <i class="fa-solid fa-ruler-combined"></i> Suportes & Cantoneiras
-                    </button>
-                    
-                    <button class="tab-btn snap-start shrink-0 px-6 py-3 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-white text-cor-neutra hover:bg-cor-areia/30 border border-cor-areia/50 hover:text-cor-marinho flex items-center gap-2" onclick="openCategory(event, 'cat-puxadores')">
-                        <i class="fa-solid fa-grip-lines"></i> Puxadores & Pés
-                    </button>
-                    
-                    <button class="tab-btn snap-start shrink-0 px-6 py-3 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-white text-cor-neutra hover:bg-cor-areia/30 border border-cor-areia/50 hover:text-cor-marinho flex items-center gap-2" onclick="openCategory(event, 'cat-fechaduras')">
-                        <i class="fa-solid fa-lock"></i> Fechaduras & Fixação
-                    </button>
+                    <div id="category-menu" class="flex overflow-x-auto scrollbar-hide snap-x scroll-container-padding gap-3 cursor-grab active:cursor-grabbing select-none w-full">
+                        <button class="tab-btn snap-start shrink-0 px-6 py-3.5 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-cor-marinho text-white shadow-pill border border-cor-marinho flex items-center gap-2 hover:-translate-y-0.5" onclick="openCategory('cat-quimicos')">
+                            <i class="fa-solid fa-spray-can"></i> Químicos e Colas
+                        </button>
+                        
+                        <button class="tab-btn snap-start shrink-0 px-6 py-3.5 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-white text-cor-neutra hover:bg-cor-areia/20 border border-cor-areia hover:text-cor-marinho shadow-sm flex items-center gap-2 hover:-translate-y-0.5" onclick="openCategory('cat-ferragens')">
+                            <i class="fa-solid fa-door-open"></i> Ferragens & Corrediças
+                        </button>
+                        
+                        <button class="tab-btn snap-start shrink-0 px-6 py-3.5 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-white text-cor-neutra hover:bg-cor-areia/20 border border-cor-areia hover:text-cor-marinho shadow-sm flex items-center gap-2 hover:-translate-y-0.5" onclick="openCategory('cat-suportes')">
+                            <i class="fa-solid fa-ruler-combined"></i> Suportes & Cantoneiras
+                        </button>
+                        
+                        <button class="tab-btn snap-start shrink-0 px-6 py-3.5 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-white text-cor-neutra hover:bg-cor-areia/20 border border-cor-areia hover:text-cor-marinho shadow-sm flex items-center gap-2 hover:-translate-y-0.5" onclick="openCategory('cat-puxadores')">
+                            <i class="fa-solid fa-grip-lines"></i> Puxadores & Pés
+                        </button>
+                        
+                        <button class="tab-btn snap-start shrink-0 px-6 py-3.5 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-white text-cor-neutra hover:bg-cor-areia/20 border border-cor-areia hover:text-cor-marinho shadow-sm flex items-center gap-2 hover:-translate-y-0.5" onclick="openCategory('cat-fechaduras')">
+                            <i class="fa-solid fa-lock"></i> Fechaduras & Fixação
+                        </button>
 
-                    <button class="tab-btn snap-start shrink-0 px-6 py-3 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-white text-cor-neutra hover:bg-cor-areia/30 border border-cor-areia/50 hover:text-cor-marinho flex items-center gap-2" onclick="openCategory(event, 'cat-ferramentas')">
-                        <i class="fa-solid fa-layer-group"></i> Ferramentas & MDF
-                    </button>
+                        <button class="tab-btn snap-start shrink-0 px-6 py-3.5 rounded-full font-heading font-semibold text-sm transition-all duration-300 bg-white text-cor-neutra hover:bg-cor-areia/20 border border-cor-areia hover:text-cor-marinho shadow-sm flex items-center gap-2 hover:-translate-y-0.5" onclick="openCategory('cat-ferramentas')">
+                            <i class="fa-solid fa-layer-group"></i> Ferramentas & MDF
+                        </button>
+                    </div>
                 </div>
 
-                <div class="min-h-[500px]">
-                    <div id="cat-quimicos" class="tab-content block animate-fadeInScale">
-                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="grid-quimicos"></div>
-                    </div>
-                    <div id="cat-ferragens" class="tab-content hidden">
-                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="grid-ferragens"></div>
-                    </div>
-                    <div id="cat-suportes" class="tab-content hidden">
-                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="grid-suportes"></div>
-                    </div>
-                    <div id="cat-puxadores" class="tab-content hidden">
-                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="grid-puxadores"></div>
-                    </div>
-                    <div id="cat-fechaduras" class="tab-content hidden">
-                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="grid-fechaduras"></div>
-                    </div>
-                    <div id="cat-ferramentas" class="tab-content hidden">
-                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="grid-ferramentas"></div>
-                    </div>
+                <!-- Conteúdo das Abas (Gerado via JS) -->
+                <div class="min-h-[400px]">
+                    <div id="cat-quimicos" class="tab-content block animate-fadeInScale"><div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="grid-quimicos"></div></div>
+                    <div id="cat-ferragens" class="tab-content hidden"><div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="grid-ferragens"></div></div>
+                    <div id="cat-suportes" class="tab-content hidden"><div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="grid-suportes"></div></div>
+                    <div id="cat-puxadores" class="tab-content hidden"><div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="grid-puxadores"></div></div>
+                    <div id="cat-fechaduras" class="tab-content hidden"><div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="grid-fechaduras"></div></div>
+                    <div id="cat-ferramentas" class="tab-content hidden"><div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="grid-ferramentas"></div></div>
                 </div>
             </div>
         </section>
@@ -282,25 +279,24 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 
                 <div class="text-center max-w-3xl mx-auto mb-16">
-                    <h2 class="font-heading font-extrabold text-3xl md:text-5xl text-cor-marinho mb-4">Envie seu Orçamento</h2>
-                    <p class="text-cor-neutra text-lg">Receberemos os dados estruturados diretamente no WhatsApp da loja e retornaremos rapidamente com os valores e disponibilidade.</p>
+                    <h2 class="font-heading font-extrabold text-3xl md:text-5xl text-cor-marinho mb-4">Finalize seu Orçamento</h2>
+                    <p class="text-cor-neutra text-lg">Receberemos sua lista detalhada diretamente no WhatsApp da loja e retornaremos rapidamente com os valores e disponibilidade em estoque.</p>
                 </div>
 
                 <div class="bg-white rounded-[2.5rem] shadow-premium overflow-hidden max-w-5xl mx-auto border border-cor-areia/40">
                     <div class="flex flex-col lg:flex-row">
                         
-                        <!-- Painel Lateral de Info -->
+                        <!-- Painel Lateral -->
                         <div class="bg-gradient-to-br from-cor-marinho to-[#153463] p-10 lg:w-1/3 text-white flex flex-col justify-between relative overflow-hidden">
-                            <!-- Efeito Decorativo -->
                             <div class="absolute -right-10 -top-10 w-40 h-40 bg-cor-destaque/30 rounded-full blur-3xl"></div>
                             <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-cor-madeira/30 rounded-full blur-3xl"></div>
                             
                             <div class="relative z-10">
-                                <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-2xl mb-8 backdrop-blur-sm border border-white/20">
+                                <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-2xl mb-8 backdrop-blur-sm border border-white/20 shadow-lg">
                                     <i class="fa-solid fa-bolt text-cor-areia"></i>
                                 </div>
                                 <h3 class="font-heading font-bold text-3xl mb-4 text-white">Atendimento Expresso</h3>
-                                <p class="text-cor-areia/80 mb-8 font-light leading-relaxed">Sua lista será analisada pela nossa equipe de vendas assim que for enviada.</p>
+                                <p class="text-cor-areia/80 mb-8 font-light leading-relaxed">Sua lista será analisada pela nossa equipe comercial assim que for recebida.</p>
                                 
                                 <ul class="space-y-6">
                                     <li class="flex items-center gap-4">
@@ -319,72 +315,67 @@
                             </div>
                         </div>
 
-                        <!-- O Formulário Inteligente -->
+                        <!-- Formulário -->
                         <div class="p-8 lg:p-12 lg:w-2/3 bg-[#fcfbf9]">
                             <form id="form-orcamento" class="space-y-8">
                                 
-                                <!-- Bloco 1: Identificação -->
+                                <!-- Identificação -->
                                 <div>
                                     <h4 class="font-heading font-bold text-cor-marinho mb-4 flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-cor-areia/40 flex items-center justify-center text-cor-destaque text-sm"><i class="fa-solid fa-user"></i></div> Identificação</h4>
                                     <div>
                                         <label for="nome" class="block text-sm font-semibold text-cor-marinho mb-1.5 ml-1">Nome ou Empresa <span class="text-cor-madeira">*</span></label>
                                         <div class="relative">
                                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-cor-neutra"><i class="fa-regular fa-id-badge"></i></div>
-                                            <input type="text" id="nome" required class="w-full pl-11 pr-4 py-3.5 rounded-xl border-2 border-transparent bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="Digite seu nome completo">
+                                            <input type="text" id="nome" required class="w-full pl-11 pr-4 py-3.5 rounded-xl border border-cor-areia/50 bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="Digite seu nome completo">
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Bloco 2: Endereço Inteligente -->
+                                <!-- Endereço via CEP -->
                                 <div>
                                     <h4 class="font-heading font-bold text-cor-marinho mb-4 flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-cor-areia/40 flex items-center justify-center text-cor-destaque text-sm"><i class="fa-solid fa-location-dot"></i></div> Dados de Entrega</h4>
                                     
                                     <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
-                                        <!-- CEP -->
                                         <div class="md:col-span-4 relative">
                                             <label for="cep" class="block text-sm font-semibold text-cor-marinho mb-1.5 ml-1">CEP <span class="text-cor-madeira">*</span></label>
                                             <div class="relative">
-                                                <input type="text" id="cep" required maxlength="9" class="w-full px-4 py-3.5 rounded-xl border-2 border-transparent bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="00000-000">
+                                                <input type="text" id="cep" required maxlength="9" class="w-full px-4 py-3.5 rounded-xl border border-cor-areia/50 bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="00000-000">
                                                 <div id="cep-loading" class="absolute inset-y-0 right-0 pr-4 flex items-center hidden text-cor-destaque"><i class="fa-solid fa-circle-notch fa-spin"></i></div>
                                             </div>
                                             <span id="cep-feedback" class="absolute -bottom-5 left-1 text-[11px] text-green-600 font-semibold hidden"><i class="fa-solid fa-check"></i> Encontrado!</span>
                                         </div>
                                         
-                                        <!-- Rua -->
                                         <div class="md:col-span-8">
                                             <label for="rua" class="block text-sm font-semibold text-cor-marinho mb-1.5 ml-1">Rua / Avenida <span class="text-cor-madeira">*</span></label>
-                                            <input type="text" id="rua" required class="w-full px-4 py-3.5 rounded-xl border-2 border-transparent bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="Ex: Av. Senador Levindo Coelho">
+                                            <input type="text" id="rua" required class="w-full px-4 py-3.5 rounded-xl border border-cor-areia/50 bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="Ex: Av. Senador Levindo Coelho">
                                         </div>
                                         
-                                        <!-- Número -->
                                         <div class="md:col-span-3">
                                             <label for="numero" class="block text-sm font-semibold text-cor-marinho mb-1.5 ml-1">Número <span class="text-cor-madeira">*</span></label>
-                                            <input type="text" id="numero" required class="w-full px-4 py-3.5 rounded-xl border-2 border-transparent bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="Nº">
+                                            <input type="text" id="numero" required class="w-full px-4 py-3.5 rounded-xl border border-cor-areia/50 bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="Nº">
                                         </div>
                                         
-                                        <!-- Complemento -->
                                         <div class="md:col-span-4">
                                             <label for="complemento" class="block text-sm font-semibold text-cor-marinho mb-1.5 ml-1">Complemento</label>
-                                            <input type="text" id="complemento" class="w-full px-4 py-3.5 rounded-xl border-2 border-transparent bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="Apto, Galpão...">
+                                            <input type="text" id="complemento" class="w-full px-4 py-3.5 rounded-xl border border-cor-areia/50 bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="Apto, Galpão...">
                                         </div>
                                         
-                                        <!-- Bairro -->
                                         <div class="md:col-span-5">
                                             <label for="bairro" class="block text-sm font-semibold text-cor-marinho mb-1.5 ml-1">Bairro <span class="text-cor-madeira">*</span></label>
-                                            <input type="text" id="bairro" required class="w-full px-4 py-3.5 rounded-xl border-2 border-transparent bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="Seu Bairro">
+                                            <input type="text" id="bairro" required class="w-full px-4 py-3.5 rounded-xl border border-cor-areia/50 bg-white shadow-sm focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all text-cor-marinho placeholder-cor-neutra/60" placeholder="Seu Bairro">
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Bloco 3: Pedido e Pagamento -->
-                                <div class="bg-white p-6 rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] border border-cor-areia/20">
+                                <!-- Pedido e Pagamento -->
+                                <div class="bg-white p-6 rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] border border-cor-areia/30">
                                     <h4 class="font-heading font-bold text-cor-marinho mb-4 flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-cor-areia/40 flex items-center justify-center text-cor-destaque text-sm"><i class="fa-solid fa-list-check"></i></div> Resumo do Pedido</h4>
                                     
                                     <div class="mb-5">
                                         <label for="pagamento" class="block text-sm font-semibold text-cor-marinho mb-1.5 ml-1">Meio de Pagamento Preferido <span class="text-cor-madeira">*</span></label>
                                         <div class="relative">
                                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-cor-neutra"><i class="fa-solid fa-wallet"></i></div>
-                                            <select id="pagamento" required class="w-full pl-11 pr-10 py-3.5 rounded-xl border-2 border-cor-areia/30 bg-[#fcfbf9] focus:bg-white focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all appearance-none text-cor-marinho font-medium">
+                                            <select id="pagamento" required class="w-full pl-11 pr-10 py-3.5 rounded-xl border border-cor-areia/50 bg-[#fcfbf9] focus:bg-white focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all appearance-none text-cor-marinho font-medium">
                                                 <option value="" disabled selected>Selecione uma opção</option>
                                                 <option value="Pix">Pix (Aprovação Imediata)</option>
                                                 <option value="Cartão de Crédito">Cartão de Crédito</option>
@@ -403,17 +394,16 @@
                                             <label for="produtos" class="block text-sm font-semibold text-cor-marinho">Lista de Produtos / Carrinho <span class="text-cor-madeira">*</span></label>
                                             <span class="text-[11px] text-cor-destaque font-bold uppercase tracking-wide bg-cor-destaque/10 px-2 py-0.5 rounded-md"><i class="fa-solid fa-mouse-pointer"></i> Clique no catálogo</span>
                                         </div>
-                                        <textarea id="produtos" required rows="6" class="w-full px-4 py-4 rounded-xl border-2 border-cor-areia/40 bg-[#fcfbf9] focus:bg-white focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all resize-y text-cor-marinho placeholder-cor-neutra leading-relaxed custom-scrollbar" placeholder="Sua lista de produtos aparecerá aqui ao clicar no catálogo acima. &#10;&#10;Você também pode digitar manualmente:&#10;Ex: 2x Chapas MDF Branco Tx 15mm&#10;Ex: 5x Corrediças telescópicas 45cm"></textarea>
+                                        <textarea id="produtos" required rows="6" class="w-full px-4 py-4 rounded-xl border border-cor-areia/50 bg-[#fcfbf9] focus:bg-white focus:border-cor-destaque focus:ring-4 focus:ring-cor-destaque/10 outline-none transition-all resize-y text-cor-marinho placeholder-cor-neutra leading-relaxed custom-scrollbar shadow-inner" placeholder="Sua lista de produtos aparecerá aqui ao clicar no catálogo acima. &#10;&#10;Você também pode digitar manualmente:&#10;Ex: 2x Chapas MDF Branco Tx 15mm&#10;Ex: 5x Corrediças telescópicas 45cm"></textarea>
                                     </div>
                                 </div>
 
-                                <!-- Botões de Ação -->
+                                <!-- Botões -->
                                 <div class="flex flex-col-reverse sm:flex-row gap-4 pt-4 mt-2">
                                     <button type="reset" class="w-full sm:w-1/4 px-6 py-4 rounded-xl border-2 border-cor-neutra/30 text-cor-neutra font-bold hover:bg-white hover:border-cor-madeira hover:text-cor-madeira transition-all text-center group">
                                         <i class="fa-solid fa-eraser mr-2 group-hover:rotate-12 transition-transform"></i> Limpar
                                     </button>
                                     <button type="submit" class="w-full sm:w-3/4 px-6 py-4 rounded-xl bg-cor-destaque hover:bg-cor-marinho text-white font-bold text-lg shadow-[0_8px_20px_rgba(20,84,156,0.3)] hover:shadow-[0_12px_25px_rgba(14,37,76,0.4)] hover:-translate-y-1 transition-all flex items-center justify-center gap-3 overflow-hidden relative group">
-                                        <!-- Efeito de brilho no botão -->
                                         <div class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1.5s_infinite]"></div>
                                         <i class="fa-brands fa-whatsapp text-2xl"></i> Enviar Orçamento
                                     </button>
@@ -426,7 +416,6 @@
         </section>
 
         <section id="localizacao" class="py-24 bg-cor-marinho border-t border-cor-areia/20 relative overflow-hidden">
-            <!-- Padrão visual de fundo -->
             <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(#e3d4c4 2px, transparent 2px); background-size: 30px 30px;"></div>
             
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
@@ -474,7 +463,6 @@
                         </div>
                     </div>
 
-                    <!-- Mapa com styling Premium -->
                     <div class="lg:col-span-7 h-[450px] lg:h-[600px] w-full rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-8 border-white/10 relative group">
                         <div class="absolute inset-0 bg-cor-marinho/20 group-hover:bg-transparent transition-colors duration-500 pointer-events-none z-10"></div>
                         <iframe 
@@ -499,7 +487,7 @@
                 
                 <div class="flex items-center flex-col md:flex-row gap-5">
                     <div class="bg-white p-3 rounded-xl inline-block shadow-lg">
-                        <img src="assets/images/logo.png" alt="MDF Colares" class="h-12 w-auto" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=MDF&background=0e254c&color=e3d4c4&size=100&font-size=0.4&rounded=true&bold=true';">
+                        <img src="logo.png" alt="MDF Colares" class="h-12 w-auto" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=MDF&background=0e254c&color=e3d4c4&size=100&font-size=0.4&rounded=true&bold=true';">
                     </div>
                     <div class="text-center md:text-left">
                         <h5 class="font-heading font-bold text-white text-2xl tracking-tight mb-1">MDF Colares</h5>
@@ -523,18 +511,18 @@
             <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-sm gap-4">
                 <p>&copy; 2024 MDF Colares. Todos os direitos reservados.</p>
                 
-                <!-- Assinatura DevDuo (Conforme solicitado) -->
-                <p class="flex items-center gap-1.5 font-medium text-cor-areia/40">
-                    Criado com <i class="fa-solid fa-heart text-cor-madeira text-xs animate-pulse"></i> pela 
-                    <a href="https://devduo.tec.br/" target="_blank" rel="noopener noreferrer" class="text-cor-areia hover:text-white transition-colors border-b border-transparent hover:border-white font-bold ml-1">
-                        DevDuo
+                <!-- Assinatura DevDuo com Destaque -->
+                <p class="flex items-center gap-1.5 font-medium text-cor-areia/60">
+                    Desenvolvido por 
+                    <a href="https://devduo.tec.br/" target="_blank" rel="noopener noreferrer" class="text-white hover:text-cor-destaque transition-colors border-b border-cor-areia/30 hover:border-cor-destaque font-bold flex items-center gap-1">
+                        DevDuo <i class="fa-solid fa-code text-xs text-cor-destaque"></i>
                     </a>
                 </p>
             </div>
         </div>
     </footer>
 
-    <!-- Carrinho Flutuante (Aparece ao adicionar itens) -->
+    <!-- Botões Flutuantes -->
     <a href="#orcamento" id="floating-cart" class="fixed bottom-24 right-6 bg-cor-marinho text-white px-5 py-3 rounded-full shadow-2xl z-[60] flex items-center gap-3 transition-all duration-500 opacity-0 translate-y-10 pointer-events-none hover:bg-cor-destaque border border-white/10">
         <div class="relative">
             <i class="fa-solid fa-cart-shopping text-xl"></i>
@@ -543,14 +531,13 @@
         <span class="font-heading font-bold text-sm">Ver Orçamento</span>
     </a>
 
-    <!-- Botão Fixo WhatsApp Principal -->
-    <a href="https://wa.me/5531988251010?text=Ol%C3%A1,%20gostaria%20de%20solicitar%20um%20or%C3%A7amento." target="_blank" class="fixed bottom-6 right-6 w-16 h-16 bg-[#25D366] text-white rounded-full flex items-center justify-center text-3xl shadow-[0_4px_20px_rgba(37,211,102,0.4)] z-[60] hover:scale-110 hover:bg-[#20bd5a] transition-all duration-300 group" aria-label="Fale conosco no WhatsApp">
+    <a href="https://wa.me/5531988251010?text=Ol%C3%A1,%20gostaria%20de%20solicitar%20um%20or%C3%A7amento." target="_blank" class="fixed bottom-6 right-6 w-16 h-16 bg-[#25D366] text-white rounded-full flex items-center justify-center text-3xl shadow-[0_4px_20px_rgba(37,211,102,0.4)] z-[60] hover:scale-110 hover:bg-[#20bd5a] transition-all duration-300 group" aria-label="WhatsApp">
         <i class="fa-brands fa-whatsapp group-hover:animate-ping absolute opacity-0 group-hover:opacity-40"></i>
         <i class="fa-brands fa-whatsapp relative z-10"></i>
     </a>
 
     <script>
-        // 1. Dados Estruturados do Catálogo de Produtos
+        // 1. Dados Estruturados do Catálogo
         const catalogo = {
             'grid-quimicos': [
                 { nome: "Adesivo instantâneo TekBond - 20g", icone: "fa-spray-can" },
@@ -562,7 +549,7 @@
                 { nome: "Cola contato KisaFix 2,8 Kg", icone: "fa-fill-drip" },
                 { nome: "Cola branca PVA Extra 1KG", icone: "fa-bottle-droplet" },
                 { nome: "Cola granulada Jowat 2KGa", icone: "fa-box-open" },
-                { nome: "Silicone branco/transparente 280g", icone: "fa-syringe" },
+                { nome: "Silicone branco/transparente - 280g", icone: "fa-syringe" },
                 { nome: "Selante acrílico Kisafix", icone: "fa-syringe" },
                 { nome: "Espuma expansiva Kisafix", icone: "fa-spray-can-sparkles" },
                 { nome: "Thinner / Aguarrás - 900Ml", icone: "fa-bottle-water" },
@@ -570,9 +557,9 @@
             ],
             'grid-ferragens': [
                 { nome: "Dobradiça S85/165 c/ cálcio 2,0", icone: "fa-door-open" },
-                { nome: "Corrediça telescópica (25 a 60cm)", icone: "fa-arrows-left-right" },
+                { nome: "Corrediça leve/pesada (25 a 60cm)", icone: "fa-arrows-left-right" },
                 { nome: "Corrediça Branca (25 a 45cm)", icone: "fa-arrows-left-right" },
-                { nome: "Rodízios com freio e sem freio", icone: "fa-circle-notch" },
+                { nome: "Rodízios com/sem freio", icone: "fa-circle-notch" },
                 { nome: "Kit Porta Correr SP10 80KG", icone: "fa-door-closed" }
             ],
             'grid-suportes': [
@@ -621,7 +608,7 @@
 
         let itemsNoCarrinho = 0;
 
-        // 2. Renderização Inteligente das Abas
+        // 2. Renderização das Abas
         window.addEventListener('DOMContentLoaded', () => {
             Object.keys(catalogo).forEach(gridId => {
                 const gridElement = document.getElementById(gridId);
@@ -630,8 +617,7 @@
                     htmlContent += `
                         <div class="group bg-white border border-cor-areia/40 rounded-2xl overflow-hidden hover:border-cor-destaque/60 hover:shadow-card transition-all duration-300 flex flex-col h-full cursor-pointer relative" onclick="adicionarAoOrcamento('${produto.nome}')" title="Adicionar ao orçamento">
                             <div class="aspect-[4/3] bg-gradient-to-br from-cor-areia/10 to-transparent p-6 flex items-center justify-center border-b border-cor-areia/20 relative overflow-hidden">
-                                <i class="fa-solid ${produto.icone} text-4xl text-cor-neutra/50 group-hover:scale-125 group-hover:text-cor-destaque/40 transition-all duration-500"></i>
-                                <div class="absolute inset-0 bg-cor-destaque/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                <i class="fa-solid ${produto.icone} text-4xl text-cor-neutra/50 group-hover:scale-125 group-hover:text-cor-destaque/60 transition-all duration-500"></i>
                             </div>
                             <div class="p-4 sm:p-5 flex-grow flex flex-col justify-between bg-white z-10">
                                 <h4 class="font-semibold text-cor-marinho text-[13px] sm:text-sm leading-tight mb-4 group-hover:text-cor-destaque transition-colors">${produto.nome}</h4>
@@ -644,37 +630,61 @@
             });
         });
 
-        // 3. Sistema de Navegação em Abas (Tab System)
-        function openCategory(evt, categoryName) {
+        // 3. Lógica do Menu (Abas) e Arraste (Drag to Scroll)
+        const slider = document.getElementById('category-menu');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        let isDragging = false; // Flag para evitar clique ao arrastar
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            isDragging = false;
+            slider.classList.add('active:cursor-grabbing');
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+        slider.addEventListener('mouseleave', () => { isDown = false; slider.classList.remove('active:cursor-grabbing'); });
+        slider.addEventListener('mouseup', () => { isDown = false; slider.classList.remove('active:cursor-grabbing'); });
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 2; // Velocidade
+            if (Math.abs(walk) > 5) isDragging = true; // Se moveu mais que 5px, considera arraste
+            slider.scrollLeft = scrollLeft - walk;
+        });
+
+        function openCategory(categoryName) {
+            if(isDragging) return; // Cancela ação se foi um arraste
+            
+            // Oculta todos
             const tabContents = document.getElementsByClassName("tab-content");
             for (let i = 0; i < tabContents.length; i++) {
                 tabContents[i].classList.add("hidden");
                 tabContents[i].classList.remove("block", "animate-fadeInScale");
             }
-
+            // Reseta cores
             const tabBtns = document.getElementsByClassName("tab-btn");
             for (let i = 0; i < tabBtns.length; i++) {
-                // Reset styling das Pílulas
                 tabBtns[i].classList.remove("bg-cor-marinho", "text-white", "border-cor-marinho");
-                tabBtns[i].classList.add("bg-white", "text-cor-neutra", "border-cor-areia/50");
+                tabBtns[i].classList.add("bg-white", "text-cor-neutra", "border-cor-areia");
             }
-
+            // Ativa selecionada
             const activeTab = document.getElementById(categoryName);
             activeTab.classList.remove("hidden");
             activeTab.classList.add("block", "animate-fadeInScale");
             
-            // Ativar Pílula Clicada
-            evt.currentTarget.classList.remove("bg-white", "text-cor-neutra", "border-cor-areia/50");
-            evt.currentTarget.classList.add("bg-cor-marinho", "text-white", "border-cor-marinho");
+            // Botão atual
+            event.currentTarget.classList.remove("bg-white", "text-cor-neutra", "border-cor-areia");
+            event.currentTarget.classList.add("bg-cor-marinho", "text-white", "border-cor-marinho");
         }
 
-        // 4. UX Premium: Adicionar ao Carrinho & Toast Notification
+        // 4. Toast e Carrinho
         function adicionarAoOrcamento(nomeProduto) {
             const textarea = document.getElementById('produtos');
-            
-            // Formatação inteligente da lista
             if(textarea.value.length === 0 || textarea.value === textarea.placeholder) {
-                textarea.value = ''; // limpa se for placeholder
+                textarea.value = ''; 
             } else if (!textarea.value.endsWith('\n')) {
                 textarea.value += '\n';
             }
@@ -682,67 +692,55 @@
             
             itemsNoCarrinho++;
             
-            // Feedback Visual na Caixa de Texto
-            textarea.classList.remove('border-cor-areia/40');
+            textarea.classList.remove('border-cor-areia/50');
             textarea.classList.add('pulse-border', 'border-cor-destaque', 'bg-cor-destaque/5');
             setTimeout(() => {
                 textarea.classList.remove('pulse-border', 'border-cor-destaque', 'bg-cor-destaque/5');
-                textarea.classList.add('border-cor-areia/40');
+                textarea.classList.add('border-cor-areia/50');
             }, 1500);
 
-            // Mostrar Toast Notification
             showToast(nomeProduto);
             
-            // Mostrar/Atualizar botão de carrinho flutuante
             const cartBtn = document.getElementById('floating-cart');
-            const cartBadge = document.getElementById('cart-badge');
-            cartBadge.innerText = itemsNoCarrinho;
+            document.getElementById('cart-badge').innerText = itemsNoCarrinho;
             cartBtn.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
         }
 
         function showToast(nomeProduto) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = 'toast-enter bg-white border-l-4 border-cor-destaque shadow-[0_10px_30px_rgba(0,0,0,0.1)] rounded-r-xl p-4 flex items-center gap-4 w-72 sm:w-80';
+            toast.className = 'toast-enter bg-white border-l-4 border-cor-destaque shadow-xl rounded-r-xl p-4 flex items-center gap-4 w-72 sm:w-80';
             toast.innerHTML = `
-                <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 shrink-0">
-                    <i class="fa-solid fa-check"></i>
-                </div>
+                <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 shrink-0"><i class="fa-solid fa-check"></i></div>
                 <div>
                     <h5 class="text-xs font-bold text-cor-neutra uppercase tracking-wider mb-0.5">Adicionado!</h5>
                     <p class="text-sm font-semibold text-cor-marinho truncate w-48">${nomeProduto}</p>
                 </div>
             `;
-            
             container.appendChild(toast);
-
             setTimeout(() => {
                 toast.classList.replace('toast-enter', 'toast-exit');
                 setTimeout(() => toast.remove(), 300);
             }, 2500);
         }
 
-        // 5. Integração ViaCEP e Lógica de Envio para WhatsApp
+        // 5. CEP e Envio WhatsApp
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('form-orcamento');
             const cepInput = document.getElementById('cep');
             const cepLoading = document.getElementById('cep-loading');
             const cepFeedback = document.getElementById('cep-feedback');
 
-            // Máscara básica do CEP
             cepInput.addEventListener('input', function(e) {
                 let v = e.target.value.replace(/\D/g, "");
                 v = v.replace(/^(\d{5})(\d)/, "$1-$2");
                 e.target.value = v;
             });
 
-            // ViaCEP
             cepInput.addEventListener('blur', function() {
                 let cep = this.value.replace(/\D/g, '');
-                
                 if (cep.length === 8) {
                     cepLoading.classList.remove('hidden');
-                    
                     fetch(`https://viacep.com.br/ws/${cep}/json/`)
                         .then(response => response.json())
                         .then(data => {
@@ -750,7 +748,7 @@
                             if (!data.erro) {
                                 document.getElementById('rua').value = data.logradouro;
                                 document.getElementById('bairro').value = data.bairro;
-                                document.getElementById('numero').focus(); // UX: Foca no número automaticamente
+                                document.getElementById('numero').focus();
                                 
                                 cepFeedback.classList.remove('hidden');
                                 cepInput.classList.add('border-green-500', 'bg-green-50');
@@ -759,18 +757,12 @@
                                     cepInput.classList.remove('border-green-500', 'bg-green-50');
                                 }, 3000);
                             }
-                        })
-                        .catch(err => {
-                            cepLoading.classList.add('hidden');
-                            console.error("Erro ViaCEP", err);
-                        });
+                        }).catch(err => { cepLoading.classList.add('hidden'); });
                 }
             });
 
-            // Envio para WhatsApp Inteligente
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
-
                 const nome = document.getElementById('nome').value.trim();
                 const cep = document.getElementById('cep').value.trim();
                 const rua = document.getElementById('rua').value.trim();
@@ -780,64 +772,22 @@
                 const pagamento = document.getElementById('pagamento').value;
                 const produtos = document.getElementById('produtos').value.trim();
 
-                // Montagem elegante da string (%0A = quebra de linha no URL)
                 let mensagem = `*NOVO PEDIDO DE ORÇAMENTO | MDF COLARES* 📝\n\n`;
-                mensagem += `👤 *DADOS DO CLIENTE*\n`;
-                mensagem += `Nome: ${nome}\n\n`;
-                
-                mensagem += `📍 *ENDEREÇO DE ENTREGA*\n`;
-                mensagem += `CEP: ${cep}\n`;
-                mensagem += `${rua}, Nº ${numero}`;
+                mensagem += `👤 *DADOS DO CLIENTE*\nNome: ${nome}\n\n`;
+                mensagem += `📍 *ENDEREÇO DE ENTREGA*\nCEP: ${cep}\n${rua}, Nº ${numero}`;
                 if(complemento) mensagem += ` - ${complemento}`;
                 mensagem += `\nBairro: ${bairro}\n\n`;
-                
-                mensagem += `💳 *PREFERÊNCIA DE PAGAMENTO*\n`;
-                mensagem += `Método: ${pagamento}\n\n`;
-                
-                mensagem += `🛒 *LISTA DE PRODUTOS*\n`;
-                mensagem += `\`\`\`\n${produtos}\n\`\`\`\n\n`;
-                
-                mensagem += `_Atendimento iniciado via Site Oficial._`;
+                mensagem += `💳 *PAGAMENTO*\nMétodo: ${pagamento}\n\n`;
+                mensagem += `🛒 *LISTA DE PRODUTOS*\n\`\`\`\n${produtos}\n\`\`\`\n\n`;
+                mensagem += `_Atendimento iniciado via Site._`;
 
-                const mensagemCodificada = encodeURIComponent(mensagem);
-                const url = `https://wa.me/5531988251010?text=${mensagemCodificada}`;
-                
-                window.open(url, '_blank');
+                window.open(`https://wa.me/5531988251010?text=${encodeURIComponent(mensagem)}`, '_blank');
             });
             
-            // Limpar formulário reseta o carrinho flutuante
             form.addEventListener('reset', function() {
                 itemsNoCarrinho = 0;
                 document.getElementById('floating-cart').classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
             });
-        });
-
-        // 6. UX Premium: Drag to Scroll para o Menu de Categorias (Permite arrastar no PC)
-        const slider = document.getElementById('category-menu');
-        let isDown = false;
-        let startX;
-        let scrollLeft;
-
-        slider.addEventListener('mousedown', (e) => {
-            isDown = true;
-            slider.classList.add('active:cursor-grabbing');
-            startX = e.pageX - slider.offsetLeft;
-            scrollLeft = slider.scrollLeft;
-        });
-        slider.addEventListener('mouseleave', () => {
-            isDown = false;
-            slider.classList.remove('active:cursor-grabbing');
-        });
-        slider.addEventListener('mouseup', () => {
-            isDown = false;
-            slider.classList.remove('active:cursor-grabbing');
-        });
-        slider.addEventListener('mousemove', (e) => {
-            if (!isDown) return;
-            e.preventDefault(); // Previne seleção de texto acidental
-            const x = e.pageX - slider.offsetLeft;
-            const walk = (x - startX) * 2; // Velocidade da rolagem (Multiplicador)
-            slider.scrollLeft = scrollLeft - walk;
         });
     </script>
 </body>
